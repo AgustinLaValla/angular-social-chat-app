@@ -18,15 +18,18 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
+              "./node_modules/materialize-css/dist/css/materialize.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/materialize-css/dist/js/materialize.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -41,7 +44,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -120,6 +122,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "angular-chat-app"
+    }
+  },
+  "defaultProject": "angular-chat-app",
+  "cli": {
+    "analytics": "46007d06-b1c0-4ff1-90de-ef3d377c663d"
+  }
 }

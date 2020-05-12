@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="row" >
+        <div  class="col s10 offset-1 z-depth-3" id="panel" style="padding: 0 0 25px 0; border-radius: 8px;">
+            <h3 id="title">Register</h3>
+            <form [formGroup]="signUpForm" novalidate (ngSubmit)="signup()">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input id="text" type="text" class="validate" formControlName="username" required>
+                        <label for="text">Useranme</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">email</i>
+                        <input id="signup-email" type="email" class="validate" formControlName="email" required>
+                        <label for="signup-email">Email</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">vpn_key</i>
+                        <input id="signup-password" type="password" class="validate" formControlName="password" required>
+                        <label for="signup-password">Password</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn waves-effect deep-purple" style="width: 100%;" [disabled]="!signUpForm.valid">
+                    Sing Up!
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
