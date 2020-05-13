@@ -55,3 +55,9 @@ button{
   margin-right: 10px;
   font-weight: 500;
 }
+.toast-style {
+  top: auto !important;
+  right: auto !important;
+  bottom: 10%;
+  left:7%;
+}

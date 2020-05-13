@@ -16,4 +16,9 @@ export class AuthService {
     return this.http.post(url, body).pipe(map(resp => resp['token']));
   };
 
+  signIn(body:{email:string, password:string}) { 
+    const url = `${this.url}/auth/login`;
+    return this.http.post(url, body)
+  }
+
 };
