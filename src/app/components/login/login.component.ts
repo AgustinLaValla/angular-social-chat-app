@@ -3,6 +3,7 @@ import { NgForm, FormControl } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { UiService } from 'src/app/services/ui.service';
 import { Router } from '@angular/router';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,8 @@ export class LoginComponent implements OnInit {
 
   constructor(private authService: AuthService, 
               private uiService: UiService,
-              private router:Router) { }
+              private router:Router,
+              private tokenService:TokenService) { }
 
   ngOnInit(): void { }
 
@@ -22,6 +24,8 @@ export class LoginComponent implements OnInit {
 
     this.authService.signIn(f.value).subscribe((resp) => {
       
+      this.tokenService.setToken(resp['token']);
+
       this.uiService.loadingSubjet.next(false);
 
       this.router.navigate(['/streams']);

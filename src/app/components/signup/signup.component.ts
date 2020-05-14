@@ -3,6 +3,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UiService } from 'src/app/services/ui.service';
+import { TokenService } from 'src/app/services/token.service';
 
 @Component({
   selector: 'app-signup',
@@ -13,9 +14,11 @@ export class SignupComponent implements OnInit {
 
   public signUpForm: FormGroup;
 
-  constructor(private authService: AuthService,
+  constructor(
+    private authService: AuthService,
     private router: Router,
-    private uiService: UiService) { }
+    private uiService: UiService,
+    private tokenService: TokenService) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -34,17 +37,19 @@ export class SignupComponent implements OnInit {
 
     this.authService.signUp(this.signUpForm.value).subscribe(resp => {
 
-      this.signUpForm.reset();
+      this.tokenService.setToken(resp['token']); //Set Token in the cookies
+
+      this.signUpForm.reset(); //Rest Form
 
       this.uiService.loadingSubjet.next(false);
 
       this.router.navigate(['/streams']);
-      
+
     }, error => {
 
-        this.uiService.errorHandler(error);
-        
-        this.uiService.loadingSubjet.next(false);
+      this.uiService.errorHandler(error);
+
+      this.uiService.loadingSubjet.next(false);
 
     });
   };
