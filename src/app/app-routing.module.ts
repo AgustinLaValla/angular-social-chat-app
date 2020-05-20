@@ -4,8 +4,8 @@ import { AuthGuard } from './guards/auth.guard';
 
 
 const routes: Routes = [
-  { path: '', loadChildren: () => import('./components/auth-tabs/auth-tabs.module').then(m => m.AuthTabsModule) },
-  { path: 'streams', loadChildren: () => import('./components/streams/streams.module').then(m => m.StreamsModule), canActivate:[AuthGuard] }
+  { path: 'login', loadChildren: () => import('./components/auth-tabs/auth-tabs.module').then(m => m.AuthTabsModule) },
+  { path: '', loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule), canActivate:[AuthGuard] }
 ];
 
 @NgModule({

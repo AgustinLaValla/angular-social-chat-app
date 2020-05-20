@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TokenService } from 'src/app/services/token.service';
-import { Router } from '@angular/router';
+import { UiService } from 'src/app/services/ui.service';
 
 @Component({
   selector: 'app-streams',
@@ -9,13 +8,12 @@ import { Router } from '@angular/router';
 })
 export class StreamsComponent implements OnInit {
 
-  private token:string;
+  public username:string;
 
-  constructor(private tokenService:TokenService) { }
+  constructor(private uiService:UiService) { }
 
   ngOnInit(): void { 
-    this.token = this.tokenService.getToken();
-    console.log(this.token);
+    this.uiService.showNavContent.next(true);
   };
 
 

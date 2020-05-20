@@ -1,18 +1,18 @@
 <nav class="nav-extended deep-purple">
     <div class="container">
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo">Logo</a>
+            <a [routerLink]="['/']" class="brand-logo">Chat App</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a href="sass.html">Sass</a></li>
                 <li><a href="badges.html">Components</a></li>
                 <li><a (click)="logout()">Logout</a></li>
             </ul>
         </div>
-        <div class="nav-content">
+        <div *ngIf="showNavContent" class="nav-content">
             <div class="nav-div">
                 <img class="circle responsive-img" src="http://placehold.it/50x50" alt="">
             </div>
-            <h1 class="profile-name">Agustín</h1>
+            <h1 class="profile-name">{{ username | specialChar}}</h1>
             <p class="user-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, aut.</p>
         </div>
     </div>

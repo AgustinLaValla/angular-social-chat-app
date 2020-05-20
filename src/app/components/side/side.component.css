@@ -1,7 +1,9 @@
 a {
     color: black;
 }
-
+.material-icons  { 
+    color: #673ab7;
+}
 .active a { 
     color: #fff;
 }
@@ -12,4 +14,15 @@ a {
 
 .active  i  { 
     color:  #fff;
+}
+
+.row span { 
+    font-size: 12px;
+    font-weight: bold;
+}
+.num { 
+    margin:0;
+    color:#673ab7;
+    font-weight: bold;
+    font-size: 16px;
 }

@@ -6,7 +6,11 @@
                 <div class="row">
                     <form [formGroup]="postForm" (ngSubmit)="submitPost()">
                         <div class="formDiv">
-                            <textarea id="textarea1" class="materialize-textarea"></textarea>
+                            <textarea id="textarea1" 
+                                     class="materialize-textarea"
+                                     formControlName="post"
+                            >
+                            </textarea>
 
                             <div class="file-field input-field">
 

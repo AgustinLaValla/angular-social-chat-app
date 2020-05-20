@@ -23,16 +23,16 @@ export class LoginComponent implements OnInit {
     this.uiService.loadingSubjet.next(true);
 
     this.authService.signIn(f.value).subscribe((resp) => {
-      
+
       this.tokenService.setToken(resp['token']);
+
+      this.tokenService.setUserName(resp['user'].username);
 
       this.uiService.loadingSubjet.next(false);
 
-      this.router.navigate(['/streams']);
+      this.router.navigate(['/']);
 
     } , error => {
-
-      console.log(error);
 
       this.uiService.errorHandler(error);
 

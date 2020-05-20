@@ -3,31 +3,33 @@
     <div class="col 12 m4">
         <a>
             <span>Post</span>
-            <p>10</p>
+            <p class="num">10</p>
         </a>
     </div>
 
     <div class="col 12 m4">
         <a>
             <span>Following</span>
-            <p>10</p>
+            <p class="num">10</p>
         </a>
     </div>
 
     <div class="col 12 m4">
         <a>
             <span>Followers</span>
-            <p>10</p>
+            <p class="num">10</p>
         </a>
     </div>
 
 </div>
 
 <ul class="collection with-header">
-    <li class="collection-item active">
-        <div>Streams
-            <a href="#!" class="secondary-content"><i class="material-icons">announcement</i></a>
-        </div>
+    <li class="collection-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+        <a [routerLink]="['/']">
+            <div>Streams
+                <a href="#!" class="secondary-content"><i class="material-icons">announcement</i></a>
+            </div>
+        </a>
     </li>
     <li class="collection-item">
         <div>People

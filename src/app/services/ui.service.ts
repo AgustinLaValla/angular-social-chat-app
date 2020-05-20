@@ -6,8 +6,8 @@ import * as M from 'materialize-css';
 export class UiService {
 
     public loadingSubjet = new Subject<boolean>();
-
     public toast: string;
+    public showNavContent = new Subject<boolean>();
 
     constructor() { }
     

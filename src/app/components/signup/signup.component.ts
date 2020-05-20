@@ -38,12 +38,15 @@ export class SignupComponent implements OnInit {
     this.authService.signUp(this.signUpForm.value).subscribe(resp => {
 
       this.tokenService.setToken(resp['token']); //Set Token in the cookies
+      
+      this.tokenService.setUserName(resp['user'].username);
 
       this.signUpForm.reset(); //Rest Form
 
       this.uiService.loadingSubjet.next(false);
 
-      this.router.navigate(['/streams']);
+
+      this.router.navigate(['/']);
 
     }, error => {
 

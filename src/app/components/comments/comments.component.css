@@ -1,0 +1,36 @@
+.input-field textarea:focus + label {
+  color: #444 !important;
+}
+
+.row .input-field textarea:focus {
+  border-bottom: 1px solid #444 !important;
+  box-shadow: 0 1px 0 0 #444 !important
+}
+
+.title {
+  font-weight: bold;
+  color:  #673ab7;
+}
+
+.postDiv {
+  background-color: #673ab7 
+}
+
+form {
+  background-color: #fff;
+}
+
+.formDiv {
+  margin: 0px 20px 0px 20px;
+  padding: 50px 0px;
+}
+
+.time {
+  font-size: 14px;
+  color: #666565;
+}
+
+.postBtn {
+  float: right;
+  margin-bottom: 5px;
+}
