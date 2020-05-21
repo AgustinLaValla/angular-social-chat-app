@@ -31,6 +31,7 @@ export class PostComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getAllPosts();
     this.username = this.tokenService.getUserName();
+    console.log(this.username)
   };
 
   getAllPosts() {

@@ -5,14 +5,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { StreamsRoutingModule } from './streams-routing.module';
 
 import { StreamsComponent } from './streams.component';
-import { SideComponent } from '../side/side.component';
 import { PostFormComponent } from '../post-form/post-form.component';
 import { PostComponent } from '../post/post.component';
 
 @NgModule({
   declarations: [
     StreamsComponent,
-    SideComponent,
     PostFormComponent,
     PostComponent,
   ],
@@ -21,6 +19,5 @@ import { PostComponent } from '../post/post.component';
     StreamsRoutingModule,
     ReactiveFormsModule,
   ],
-  exports:[SideComponent]
 })
 export class StreamsModule { }

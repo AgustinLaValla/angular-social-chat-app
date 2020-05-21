@@ -12,7 +12,6 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     CommentsRoutingModule,
-    StreamsModule,
     ReactiveFormsModule
   ]
 })

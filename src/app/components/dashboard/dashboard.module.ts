@@ -5,10 +5,11 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { SpecialCharacterPipe } from 'src/app/pipes/special-character.pipe';
+import { SideComponent } from '../side/side.component';
 
 
 @NgModule({
-  declarations: [DashboardComponent, ToolbarComponent, SpecialCharacterPipe],
+  declarations: [DashboardComponent, ToolbarComponent, SpecialCharacterPipe, SideComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,

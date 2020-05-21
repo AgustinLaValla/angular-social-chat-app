@@ -13,5 +13,7 @@ export class SpecialCharacterPipe implements PipeTransform {
 
             return value.replace(specialChar, 'í' );
         };
+
+        return value;
     };
 };
