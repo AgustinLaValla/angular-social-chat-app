@@ -8,6 +8,9 @@ const routes: Routes = [{
     { path: '', loadChildren: () => import('../streams/streams.module').then(m => m.StreamsModule) },
     { path: 'people', loadChildren: () => import('../people/people.module').then(m => m.PeopleModule) },
     { path: 'post/:id', loadChildren: () => import('../comments/comments.module').then(m => m.CommentsModule) },
+    { path: 'following', loadChildren: () => import('../following/following.module').then(m => m.FollowingModule) },
+    { path: 'followers', loadChildren: () => import('../followers/followers.module').then(m => m.FollowersModule) },
+    { path: 'notifications', loadChildren: () => import('../notifications/notifications.module').then(m => m.NotificationsModule) },
   ]
 },
 ];

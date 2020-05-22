@@ -1,0 +1,8 @@
+<ul class="collection col s12 m10">
+    <li class="collection-item avatar" *ngFor="let notification of notifications">
+        <img class="circle" src="http://placehold.it/50x50">
+        <span class="title">{{ notification.message }}</span>
+        <a href="#!" class="secondary-content"><i class="material-icons">brightness_1</i></a>
+        <p class="time">{{ notification.created | date }}</p>
+    </li>
+</ul>

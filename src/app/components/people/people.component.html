@@ -10,7 +10,17 @@
                         {{ user.username }}
                     </h3>
                     <p>Country</p>
-                    <button (click)="followUser(user._id)" class="btn deep-purple" [disabled]="checkFollowing(user.followers)">Follow</button>
+                    <button *ngIf="!checkInFollowingArray(user._id)"
+                            (click)="followUser(user._id)" 
+                             class="btn deep-purple" 
+                            
+                    >        Follow
+                    </button>
+                    <button *ngIf="checkInFollowingArray(user._id)"
+                            class="btn deep-purple following"
+                            disabled
+                    >       Following
+                    </button>
                     <a class="secondary-content">
                         <i class="material-icons">chat</i>
                     </a>
