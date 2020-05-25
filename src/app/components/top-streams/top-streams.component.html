@@ -1,0 +1,38 @@
+<ul class="collection col s12 m12 l10"  *ngFor="let post of posts; let i = index">
+    <li class="collection-item avatar">
+        <img src="http://placehold.it/50x50" class="circle">
+        <span class="title">{{post.username}}</span>
+        <p class="time ">{{ timeFromNow(post.createdAt) }}<br>
+            <!-- Country -->
+        </p>
+    </li>
+
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+
+                <!-- <div class="card-image">
+                    <img class="postImage" src="https://cdn.trendhunterstatic.com/thumbs/cool-backgrounds.jpeg" alt="">
+                </div> -->
+
+                <div class="card-content">
+                    <p>{{ post.post }}</p>
+                </div>
+
+                <div class="card-action">
+
+                    <i (click)="likedPost(post)" 
+                        class="material-icons" 
+                        [ngClass]="{ 'notLiked' : (!checkInLikesArray(post.likes)), 'liked': (checkInLikesArray(post.likes))}"
+                    >   thumb_up</i>
+                    <span class="iconSpan">{{post.totalLikes}}</span>
+
+                    <i class="material-icons" [ngClass]="{ 'notLiked' : (!checkInLikesArray(post.comments)), 'liked': (checkInLikesArray(post.likes))}" (click)="openCommentBox(post)">chat</i>
+                    <span class="iconSpan">{{post.comments.length}}</span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ul>

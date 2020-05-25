@@ -27,6 +27,17 @@ export class UsersService {
 
     unFollowUser(id:string) { 
         return this.http.put(`${URL}/friends/unfollow-user`, {_id:id});
-    }
+    };
+
+    markNotification(id:string, deleteValue?:boolean) { 
+        return this.http.put(`${URL}/friends/mark-notification/${id}`, {
+            _id:id,
+            deleteValue
+        });
+    };
+
+    markAllAsRead() { 
+        return this.http.put(`${URL}/friends/mark-all`, { all:true });
+    };
 
 };

@@ -1,2 +1,19 @@
-<app-post-form></app-post-form>
-<app-post></app-post>
+<div class="row">
+    <div class="col s12 m12 l10">
+        <ul class="tabs">
+            <li class="tab col s6">
+                <a class="active" href="#streams" (click)="changeTabs('streams')">Streams</a>
+            </li>
+            <li class="tab col s6">
+                <a class="active" href="#top" (click)="changeTabs('top')">Top Streams</a>
+            </li>
+        </ul>
+    </div>
+    <div id="streams" class="col s12" *ngIf="streamsTab">
+        <app-post-form></app-post-form>
+        <app-post></app-post>
+    </div>
+    <div id="top" class="col s12" *ngIf="topStreamTab">
+        <app-top-streams></app-top-streams>
+    </div>
+</div>

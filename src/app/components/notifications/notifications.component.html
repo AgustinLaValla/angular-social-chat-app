@@ -2,7 +2,20 @@
     <li class="collection-item avatar" *ngFor="let notification of notifications">
         <img class="circle" src="http://placehold.it/50x50">
         <span class="title">{{ notification.message }}</span>
-        <a href="#!" class="secondary-content"><i class="material-icons">brightness_1</i></a>
-        <p class="time">{{ notification.created | date }}</p>
+        <a  class="secondary-content">
+            <i *ngIf="!notification.read" class="material-icons">brightness_1</i>
+            <i *ngIf="notification.read" class="material-icons">panorama_fish_eye</i>
+        </a>
+        <p class="time">{{ timeFromNow(notification.created)}}</p>
+        <div >
+            <i class="material-icons" (click)="marknotification(notification)" [ngClass]="{'disabled': notification.read, 'notDisabled': !notification.read}">
+                checkbox
+            </i>
+            <i class="material-icons" (click)="deleteNotification(notification)">delete_forever</i>
+        </div>
     </li>
 </ul>
+
+<div class="row" *ngIf="!notifications.length">
+    <div class="card pink darken-3 no-followers-card" >You have no notifications</div>
+</div>

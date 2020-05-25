@@ -16,6 +16,10 @@ export class PostsService {
         return this.http.get(`${this.url}/posts`).pipe(map((resp) => resp['posts']));
     };
 
+    getTopPosts(): Observable<any> { 
+        return this.http.get(`${this.url}/posts/top/get-all`).pipe(map((resp) => resp['posts']))
+    }
+
     getPost(id:string): Observable<any> { 
         return this.http.get(`${this.url}/posts/${id}`).pipe(map(resp => resp['post']));
     }

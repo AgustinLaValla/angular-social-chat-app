@@ -13,3 +13,18 @@
     text-align: center;
     font-size: 18px !important;
 }
+
+.disabled { 
+    color: #c0c0c0 !important;
+}
+
+.no-followers-card {
+   
+    margin-top: 20px;
+    padding: 15px 0px; 
+  
+    color:#fff;
+    text-align: center; 
+    font-size: 25px;
+    font-weight: bold;
+  }

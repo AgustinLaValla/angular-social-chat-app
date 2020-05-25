@@ -109,8 +109,9 @@
   }
   
   .markAll {
-    color: #ffffff;
-    background: #673ab7 !important;
+    /* color: #ffffff;
+    background: #673ab7 !important; */
+    text-align: right;
   }
   
   li.dropdown-button {
