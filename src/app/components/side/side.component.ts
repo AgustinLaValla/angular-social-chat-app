@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TokenService } from 'src/app/services/token.service';
-import { PostsService } from 'src/app/services/posts.service';
 import { SocketService } from 'src/app/services/socket.service';
 import { UsersService } from 'src/app/services/users.service';
 import { Subscription } from 'rxjs';
@@ -14,6 +13,7 @@ export class SideComponent implements OnInit, OnDestroy {
 
   private user: any;
   public userData:any;
+
   private postsRefreshListener$ = new Subscription();
   private usersRefreshListener$ = new Subscription();
 
@@ -43,4 +43,4 @@ export class SideComponent implements OnInit, OnDestroy {
     this.usersRefreshListener$.unsubscribe();
   };
 
-}
+};

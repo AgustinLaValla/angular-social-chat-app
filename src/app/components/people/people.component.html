@@ -8,6 +8,7 @@
                 <div class="card-action">
                     <h3 class="card-title" style="color:#673ab7;">
                         {{ user.username }}
+                        <i *ngIf="checkUserStatus(user.username).length > 0" class="fa fa-circle"></i>
                     </h3>
                     <p>Country</p>
                     <button *ngIf="!checkInFollowingArray(user._id)"
@@ -21,7 +22,7 @@
                             disabled
                     >       Following
                     </button>
-                    <a class="secondary-content">
+                    <a class="secondary-content" [routerLink]="['/chat', user._id]">
                         <i class="material-icons">chat</i>
                     </a>
                 </div>

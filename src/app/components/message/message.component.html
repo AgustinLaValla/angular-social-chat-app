@@ -1,0 +1,91 @@
+<div class="row">
+    <div class="col s12">
+        <div class="row">
+            <div class="card">
+                <div class="valign-wrapper" style="background: #673ab7;">
+                    <div class="col s12 imgCol">
+                        <img src="http://placehold.it/50x50" class="circle">
+                    </div>
+                    <div class="row">
+                        <div class="col s10 nameCol">
+                            <span>{{ receivername }}</span>
+                            <p class="isOnline" *ngIf="isOnline" class="isOnline">Online</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col s12 rowDiv" #scroller>
+        <div class="row">
+            <div class="col s12">
+                <div class="message-wraper" *ngFor="let message of messages">
+
+                    <div class="left" *ngIf="message.sendername === receivername">
+                        <div class="chat-bubble left slide-left">
+                            <div class="message">{{ message.body }}</div>
+                        </div>
+                    </div>
+
+                    <div class="right" *ngIf="message.sendername === username">
+                        <div class="chat-bubble right slide-right">
+                            <div class="message">{{ message.body }}</div>
+                        </div>
+                    </div>
+
+                    <div class="cf"></div>
+
+                </div>
+
+                <div class="left" *ngIf="typing">
+                    <div class="chat-bubble left slide-left">
+                        <div class="message">{{ receivername }} is typing...</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col s12" style="margin:0px">
+        <div class="row">
+            <div class="card" style="height: 55px">
+                <div class="inputRow">
+                    <form (ngSubmit)="sendMessage()">
+                        <div class="input-field inputField col s10">
+
+                            <emoji-mart (emojiClick)="addEmoji($event)" 
+                                        *ngIf="showEmojiPicker"
+                                        class="animated fadeIn"
+                                         [style]="{ position: 'absolute', bottom: '20px', right: '20px' }"
+                                         
+                            ></emoji-mart>
+
+                            <textarea name="message" 
+                                      class="materialize-textarea inputBox"
+                                      [(ngModel)]="message"
+                                      (keypress)="isTyping()"
+                                      (keyup.enter)="sendMessage()"
+                                      (keyup.esc)="showEmojiPicker = false"
+                                      (blur)="showEmojiPicker = false"
+                            >
+                            </textarea>
+                        </div>
+                        <div class="input-field col s1 emojiDiv">   
+                            <button type="button" 
+                                    (click)="showEmojiPicker = !showEmojiPicker" 
+                                    class="emojiBtn "
+                            >       😀
+                            </button>
+                        </div>
+                        <div class="input-field col s1">
+                            <button type="submit" class="suffix btn deep-purple">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

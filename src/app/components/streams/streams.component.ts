@@ -18,6 +18,7 @@ export class StreamsComponent implements OnInit {
 
   ngOnInit(): void { 
     this.uiService.showNavContent.next(true);
+    this.uiService.showSidebar.next(true);
 
     const tabs = document.querySelector('.tabs');
     new M.Tabs(tabs, {})

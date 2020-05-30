@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~9.1.6",
     "@angular/platform-browser-dynamic": "~9.1.6",
     "@angular/router": "~9.1.6",
+    "@ctrl/ngx-emoji-mart": "^3.1.0",
     "lodash": "^4.17.15",
     "materialize-css": "^1.0.0-rc.2",
     "moment": "^2.25.3",
@@ -29,7 +30,7 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.901.5",
+    "@angular-devkit/build-angular": "^0.901.7",
     "@angular/cli": "~9.1.5",
     "@angular/compiler-cli": "~9.1.6",
     "@angular/language-service": "~9.1.6",

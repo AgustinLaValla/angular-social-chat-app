@@ -8,6 +8,7 @@ export class UiService {
     public loadingSubjet = new Subject<boolean>();
     public toast: string;
     public showNavContent = new Subject<boolean>();
+    public showSidebar = new Subject<boolean>();
 
     constructor() { }
     

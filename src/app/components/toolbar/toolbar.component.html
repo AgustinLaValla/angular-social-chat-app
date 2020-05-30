@@ -3,7 +3,47 @@
         <div class="nav-wrapper">
             <a [routerLink]="['/']" class="brand-logo">Chat App</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li class="dropdown-trigger" data-target="dropdown" style="background: transparent">
+                
+                  <!------------------------------ CHAT NOTIFICATIONS ------------------------------>
+
+                  <li class="dropdown-trigger chat-notifications" data-target="chat-dropdown" style="background: transparent; margin: 0px 20px;">
+                    <i class="fas fa-comment-dots" style="color: white;"></i>
+                    <span *ngIf="unreadChatMessages().length > 0" class="nav-label-icon">{{unreadChatMessages().length}}</span>
+                    <ul id='chat-dropdown' class='dropdown-content col s12 collection'>
+                        <li class="collection-item avatar" *ngFor="let chat of chatList" (click)="markAndGoToChatPage(chat.receiverId._id, chat.receiverId.username)">
+                            <img src="http://placehold.it/50x50" class="circle">
+                            <span class="title">
+                                {{ chat.receiverId.username }}
+                                <a class="secondary-content">{{ messageDate(chat.msgId.message[chat.msgId.message.length - 1].createdAt)}}</a>
+                            </span>
+                            <p>
+                                {{ chat.msgId.message[chat.msgId.message.length - 1].body }}
+                                <a class="secondary-content" *ngIf="!chat.msgId.message[chat.msgId.message.length - 1].isRead && chat.receiverId.username !== chat.msgId.message[chat.msgId.message.length - 1].receivername">
+                                    <i class="material-icons">brightness_1</i>
+                                </a>
+                                <a class="secondary-content" *ngIf="chat.msgId.message[chat.msgId.message.length - 1].isRead && chat.receiverId.username !== chat.msgId.message[chat.msgId.message.length - 1].receivername">
+                                    <i class="material-icons">panorama_fish_eye</i>
+                                </a>
+                            </p>
+                        </li>
+                        <li *ngIf="!userData.length" class="collection-item avatar">
+                            <img src="http://placehold.it/50x50" class="circle">
+                            <a class="text">You Have No Notifications</a>
+                        </li>
+
+                        <li>
+                            <span>
+                                <a (click)="markAllMessagesAsRead()" class="markAll secondary-content btn deep-purple">Mark All As Read</a>
+                            </span>
+                        </li>
+
+                    </ul>
+                </li>
+
+
+                <!------------------------------ FOLLOW NOTIFICATIONS ------------------------------>
+
+                <li class="dropdown-trigger follow-notifications" data-target="dropdown" style="background: transparent; margin: 0px 20px;">
                     <i class="fas fa-bell" style="color: white;"></i>
                     <span *ngIf="unreadNotifications().length > 0" class="nav-label-icon">{{unreadNotifications().length}}</span>
                     <ul id='dropdown' class='dropdown-content col s12 collection'>
@@ -26,6 +66,9 @@
 
                     </ul>
                 </li>
+
+                  <!------------------------------ LOGOUT ------------------------------------------>
+
                 <li><a (click)="logout()">Logout</a></li>
             </ul>
         </div>

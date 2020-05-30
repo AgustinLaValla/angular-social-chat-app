@@ -4,6 +4,8 @@ import { TokenService } from 'src/app/services/token.service';
 import * as _ from 'lodash';
 import { SocketService } from 'src/app/services/socket.service';
 import { Subscription } from 'rxjs';
+import { UiService } from 'src/app/services/ui.service';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-people',
@@ -17,18 +19,25 @@ export class PeopleComponent implements OnInit, OnDestroy {
   public currentUser: any;
   public userFollowingArray: any[] = [];
 
+  private onlineUsersObs$ = new Subscription();
+  public onlineUsers = [];
+
   private refreshListenerSub$ = new Subscription();
 
-  constructor(private usersService: UsersService, 
-              private tokenService: TokenService,
-              private socketService: SocketService) { }
+  constructor(private usersService: UsersService,
+    private tokenService: TokenService,
+    private socketService: SocketService,
+    private messageService: MessageService,
+    private uiService: UiService) { }
 
   ngOnInit(): void {
+    this.uiService.showNavContent.next(true);
+    this.uiService.showSidebar.next(true);
     this.refreshListener();
     this.currentUser = this.tokenService.getTokenPayload().user;
     this.getUsers();
     this.getUser(this.currentUser._id);
-
+    this.getUsersOnline();
   };
 
   getUsers(): void {
@@ -60,15 +69,26 @@ export class PeopleComponent implements OnInit, OnDestroy {
     };
   };
 
-  refreshListener() { 
-   this.refreshListenerSub$ = this.socketService.listen('friend-list-refresh').subscribe(() => {
+  refreshListener() {
+    this.refreshListenerSub$ = this.socketService.listen('friend-list-refresh').subscribe(() => {
       this.getUsers();
       this.getUser(this.currentUser._id);
     });
   };
 
+  getUsersOnline() {
+    this.onlineUsersObs$ = this.messageService.onlineUsers.subscribe(onlineUsers => {
+       this.onlineUsers = onlineUsers;
+    });
+  };
+
+  checkUserStatus(username:string) { 
+    return this.onlineUsers.filter(user => user === username);
+  };
+
   ngOnDestroy(): void {
     this.refreshListenerSub$.unsubscribe();
+    this.onlineUsersObs$.unsubscribe();
   };
 
 };

@@ -11,6 +11,7 @@ const routes: Routes = [{
     { path: 'following', loadChildren: () => import('../following/following.module').then(m => m.FollowingModule) },
     { path: 'followers', loadChildren: () => import('../followers/followers.module').then(m => m.FollowersModule) },
     { path: 'notifications', loadChildren: () => import('../notifications/notifications.module').then(m => m.NotificationsModule) },
+    { path: 'chat/:id', loadChildren: () => import('../chat/chat.module').then(m => m.ChatModule) },
   ]
 },
 ];

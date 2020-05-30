@@ -4,6 +4,7 @@ import { UsersService } from 'src/app/services/users.service';
 import { SocketService } from 'src/app/services/socket.service';
 import { Subscription } from 'rxjs';
 import * as moment from 'moment/moment';
+import { UiService } from 'src/app/services/ui.service';
 
 @Component({
   selector: 'app-notifications',
@@ -20,9 +21,12 @@ export class NotificationsComponent implements OnInit {
   constructor(
     private tokenService: TokenService,
     private usersService: UsersService,
-    private socketService: SocketService) { }
+    private socketService: SocketService,
+    private uiService:UiService) { }
 
   ngOnInit(): void {
+    this.uiService.showNavContent.next(true);
+    this.uiService.showSidebar.next(true);
     this.currentUser = this.tokenService.getTokenPayload().user;
     this.getUser();
     this.refreshPageListener();

@@ -4,6 +4,7 @@ import { UsersService } from 'src/app/services/users.service';
 import { SocketService } from 'src/app/services/socket.service';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
+import { UiService } from 'src/app/services/ui.service';
 
 @Component({
   selector: 'app-followers',
@@ -21,9 +22,11 @@ export class FollowersComponent implements OnInit, OnDestroy {
   constructor(
     private tokenService: TokenService,
     private usersService: UsersService,
-    private socketService: SocketService) { }
+    private socketService: SocketService,
+    private uiService:UiService) { }
 
   ngOnInit(): void {
+    this.uiService.showSidebar.next(true);
     this.currentUser = this.tokenService.getTokenPayload().user;
     this.getUser();
     this.followerListRefreshListener();
