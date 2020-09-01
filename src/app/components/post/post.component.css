@@ -12,14 +12,19 @@
     color: #222 !important;
   };
 
-  .title {
-    font-weight: bold;
-    color:  #673ab7;
-  }
   
   .time {
     font-size: 14px;
     color: #666565;
+  }
+
+  .edit { 
+    float: right;
+
+    cursor: pointer;
+
+    font-weight: bold;
+    color: #673ab7;
   }
   
   .iconSpan {
@@ -60,4 +65,18 @@
   .collection-item {
     border: none !important;
   }
-  
+    /* icon prefix focus color */
+  .input-field .prefix.active {
+    color: #673ab7;
+  }
+
+/* label focus color */
+.input-field input[type=text]:focus + label, .materialize-textarea:focus:not([readonly]) + label {
+  color: #673ab7 !important;
+ }
+
+/* label underline focus color */
+ .input-field input[type=text]:focus, .materialize-textarea:focus:not([readonly]) {
+  border-bottom: 1px solid #673ab7 !important;
+  box-shadow: 0 1px 0 0 #673ab7 !important;
+ }

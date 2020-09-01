@@ -9,7 +9,6 @@ export class TokenService {
 
     setToken(token: string) {
         this.cookieService.set('chat_token', token);
-        console.log(token);
     };
 
     getToken() {
@@ -18,7 +17,6 @@ export class TokenService {
 
     deleteToken() {
         this.cookieService.delete('chat_token');
-        console.log(this.getTokenPayload());
     };
 
     getTokenPayload() {
@@ -41,6 +39,5 @@ export class TokenService {
 
     deleteUserName() {
         this.cookieService.delete('username');
-        console.log(this.getUserName());
     };
 }

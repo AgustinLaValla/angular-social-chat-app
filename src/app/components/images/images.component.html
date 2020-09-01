@@ -1,0 +1,39 @@
+<div *ngIf="isLoading" class="progress" >
+    <div class="indeterminate"></div>
+</div>
+<div class="row animated fadeIn">
+    <div class="col s6">
+        <div class="file-field input-field">
+            <div class="btn deep-purple">
+                <span>File</span>
+                <input type="file" ng2FileSelect [uploader]="uploader" (onFileSelected)="onFileSelected($event)">
+            </div>
+            <div class="file-path-wrapper">
+                <input class="file-path validate" id="filePath" type="text">
+            </div>
+        </div>
+    </div>
+
+    <div class="col s6">
+        <div class="file-field input-field">
+            <a (click)="upload()" class="waves-effect waves-light btn deep-purple">
+                <i class="material-icons left">cloud</i>
+                Upload Image
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<div class="row animated fadeIn" style="margin-top: 20px !important;">
+    <div class="col s12 m6 l4" *ngFor="let image of images">
+        <div class="item-img-wrap imgDiv">
+            <img *ngIf="images.length > 0" 
+                  class="imgCircle" 
+                  src="https://res.cloudinary.com/dnfm4fq8d/image/upload/v{{image.imgVersion}}/{{image.imgId}}"
+            >
+            <button (click)="setAsProfileImage(image)" class="btn imgBtn deep-purple">Set As Profile</button>
+            <i (click)="deleteImage(image)" class="material-icons imgIcon tooltipped" data-position="bottom" data-tooltip="Delete">delete_forever</i>
+        </div>
+    </div>
+</div>

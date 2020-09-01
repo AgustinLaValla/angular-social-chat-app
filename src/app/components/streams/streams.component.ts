@@ -9,27 +9,29 @@ import * as M from 'materialize-css';
 })
 export class StreamsComponent implements OnInit {
 
-  public username:string;
+  public username: string;
 
   public streamsTab = true;
   public topStreamTab = false;
 
-  constructor(private uiService:UiService) { }
+  constructor(private uiService: UiService) {
+    this.uiService.showSidebar = true;
 
-  ngOnInit(): void { 
+  }
+
+  ngOnInit(): void {
     this.uiService.showNavContent.next(true);
-    this.uiService.showSidebar.next(true);
 
     const tabs = document.querySelector('.tabs');
     new M.Tabs(tabs, {})
 
   };
 
-  changeTabs(value) { 
-    if(value === 'streams') { 
+  changeTabs(value) {
+    if (value === 'streams') {
       this.streamsTab = true;
       this.topStreamTab = false
-    } else  {
+    } else {
       this.streamsTab = false;
       this.topStreamTab = true;
     };

@@ -8,7 +8,7 @@ export class UiService {
     public loadingSubjet = new Subject<boolean>();
     public toast: string;
     public showNavContent = new Subject<boolean>();
-    public showSidebar = new Subject<boolean>();
+    public showSidebar:boolean = false;
 
     constructor() { }
     
@@ -29,4 +29,8 @@ export class UiService {
     
       };
 
+      toastMessage(message:string) { 
+        this.toast = `<span style="bottom:0px">${message}</span><button class="btn-flat toast-action">OK</button>`;
+        new M.Toast({ html: this.toast, classes: 'toast-style' });
+      }
 }

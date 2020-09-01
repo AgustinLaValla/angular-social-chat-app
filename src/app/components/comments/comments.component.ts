@@ -19,7 +19,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   public commentsArray: any[] = [];
 
-  public post:string;
+  public post:any;
 
   private paramsListener$ = new Subscription();
   private commentRefreshListener$ = new Subscription();
@@ -52,7 +52,6 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   addComment() {
     this.postService.addComment(this.postId, this.commentForm.value.comment).subscribe((resp) => {
-      console.log(resp);
       this.commentForm.reset();
       this.socketService.emit('refresh-posts-comments');
     });
@@ -61,8 +60,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
   getPost() {
     this.postService.getPost(this.postId).subscribe((post) => {
       this.commentsArray = post.comments.reverse();
-      this.post = post.post;
-      console.log(this.commentsArray);
+      this.post = post;
     });
   };
 
@@ -72,7 +70,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
     });
   };
   
-  timeFromNow(time: moment.Moment) {
+  timeFromNow(time: Date) {
     return moment(time).fromNow();
   };
 

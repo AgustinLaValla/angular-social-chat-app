@@ -4,7 +4,10 @@
             <div class="card">
                 <div class="valign-wrapper" style="background: #673ab7;">
                     <div class="col s12 imgCol">
-                        <img src="http://placehold.it/50x50" class="circle">
+                        <img *ngIf="receiverData" 
+                              class="imgCircle"
+                              src="https://res.cloudinary.com/dnfm4fq8d/image/upload/v{{receiverData.picVersion}}/{{receiverData.picId}}"
+                        >
                     </div>
                     <div class="row">
                         <div class="col s10 nameCol">
@@ -80,7 +83,9 @@
                             </button>
                         </div>
                         <div class="input-field col s1">
-                            <button type="submit" class="suffix btn deep-purple">Send</button>
+                            <button type="submit" class="suffix btn deep-purple">
+                                <i class="material-icons">send</i>
+                            </button>
                         </div>
                     </form>
                 </div>

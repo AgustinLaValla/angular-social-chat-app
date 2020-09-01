@@ -45,3 +45,12 @@
   font-size: 25px;
   font-weight: bold;
 }
+
+.progress{
+  background-color: rgba(103, 58, 183, .3);
+  padding: 0 !important; 
+  margin: 3px !important;
+}
+.indeterminate{
+  background-color:#673ab7
+}

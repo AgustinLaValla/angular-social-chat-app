@@ -18,6 +18,8 @@ export class FollowersComponent implements OnInit, OnDestroy {
   private following = [];
 
   private refreshListObs$ = new Subscription();
+  private isLoadingSubs$ = new Subscription();
+  public isLoading:boolean = false;
 
   constructor(
     private tokenService: TokenService,
@@ -26,17 +28,19 @@ export class FollowersComponent implements OnInit, OnDestroy {
     private uiService:UiService) { }
 
   ngOnInit(): void {
-    this.uiService.showSidebar.next(true);
+    this.loadingListener();
+    this.uiService.showSidebar = true;
     this.currentUser = this.tokenService.getTokenPayload().user;
     this.getUser();
     this.followerListRefreshListener();
   };
 
   getUser() {
+    this.uiService.loadingSubjet.next(true);
     this.usersService.getUserById(this.currentUser._id).subscribe((user) => {
       this.followers = user.followers;
       this.following = user.following;
-      console.log(this.following)
+      this.uiService.loadingSubjet.next(false);
     });
   };
 
@@ -51,6 +55,7 @@ export class FollowersComponent implements OnInit, OnDestroy {
 
   
   followUser(id: string): void {
+    this.uiService.loadingSubjet.next(true);
     this.usersService.followUser(id).subscribe((resp) => {
       this.socketService.emit('friend-list-refresh');
     });
@@ -58,6 +63,7 @@ export class FollowersComponent implements OnInit, OnDestroy {
 
   
   unfollowUser(id: string) {
+    this.uiService.loadingSubjet.next(true);
     this.usersService.unFollowUser(id).subscribe(() => {
       this.socketService.emit('friend-list-refresh');
     });
@@ -67,6 +73,10 @@ export class FollowersComponent implements OnInit, OnDestroy {
     this.refreshListObs$ = this.socketService.listen('friend-list-refresh').subscribe(() => {
       this.getUser();
     });
+  };
+
+  loadingListener() { 
+    this.isLoadingSubs$ = this.uiService.loadingSubjet.subscribe(isLoading => this.isLoading = isLoading);
   };
 
   ngOnDestroy(): void {

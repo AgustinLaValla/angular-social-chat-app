@@ -53,3 +53,8 @@
   ::-webkit-scrollbar-thumb:window-inactive {
     background-color: #673ab7;
   }
+
+  /*--------------------------------------- POINTER -------------..--------------------------*/
+  .pointer { 
+    cursor: pointer;
+  }

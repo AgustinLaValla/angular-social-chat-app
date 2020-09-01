@@ -13,24 +13,17 @@ export class DashboardComponent implements OnInit {
 
   public username: string;
 
-  private showSidebarListener$ = new Subscription();
-  public show: boolean = true;
-
   constructor(
-    private uiService: UiService,
+    public uiService: UiService,
     private socketService: SocketService,
     private tokenService: TokenService) {
 
   }
 
   ngOnInit(): void {
-    setTimeout(() => this.showSidebarListener$ = this.uiService.showSidebar.subscribe(show => this.show = show),100);
     this.username = this.tokenService.getUserName();
     this.socketService.checkStatus();
   }
 
-  ngOnDestroy(): void {
-    this.showSidebarListener$.unsubscribe();
-  };
 
 }

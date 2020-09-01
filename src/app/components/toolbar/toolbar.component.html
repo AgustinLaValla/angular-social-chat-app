@@ -11,7 +11,7 @@
                     <span *ngIf="unreadChatMessages().length > 0" class="nav-label-icon">{{unreadChatMessages().length}}</span>
                     <ul id='chat-dropdown' class='dropdown-content col s12 collection'>
                         <li class="collection-item avatar" *ngFor="let chat of chatList" (click)="markAndGoToChatPage(chat.receiverId._id, chat.receiverId.username)">
-                            <img src="http://placehold.it/50x50" class="circle">
+                            <img src="https://res.cloudinary.com/dnfm4fq8d/image/upload/v{{chat.receiverId.picVersion}}/{{chat.receiverId.picId}}" class="circle">
                             <span class="title">
                                 {{ chat.receiverId.username }}
                                 <a class="secondary-content">{{ messageDate(chat.msgId.message[chat.msgId.message.length - 1].createdAt)}}</a>
@@ -48,7 +48,7 @@
                     <span *ngIf="unreadNotifications().length > 0" class="nav-label-icon">{{unreadNotifications().length}}</span>
                     <ul id='dropdown' class='dropdown-content col s12 collection'>
                         <li class="collection-item avatar" *ngFor="let notification of userData">
-                            <img src="http://placehold.it/50x50" class="circle">
+                            <img src="https://res.cloudinary.com/dnfm4fq8d/image/upload/v{{notification.senderId.picVersion}}/{{notification.senderId.picId}}" class="circle">
                             <span
                                 [ngClass]="{'isRead': notification.read, 'unread': !notification.read}">{{notification.message}}</span>
                             <p class="time">{{fromNow(notification.created)}}</p>
@@ -74,7 +74,7 @@
         </div>
         <div *ngIf="showNavContent" class="nav-content">
             <div class="nav-div">
-                <img class="circle responsive-img" src="http://placehold.it/50x50" alt="">
+                <img class="circle responsive-img" src="https://res.cloudinary.com/dnfm4fq8d/image/upload/v{{imageVersion}}/{{imageId}}" alt="">
             </div>
             <h1 class="profile-name">{{ username | specialChar}}</h1>
             <p class="user-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, aut.</p>

@@ -6,6 +6,7 @@ import { SocketService } from 'src/app/services/socket.service';
 import { Subscription } from 'rxjs';
 import { UiService } from 'src/app/services/ui.service';
 import { MessageService } from 'src/app/services/message.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-people',
@@ -24,15 +25,22 @@ export class PeopleComponent implements OnInit, OnDestroy {
 
   private refreshListenerSub$ = new Subscription();
 
-  constructor(private usersService: UsersService,
+  private isLoadingSubs$ = new Subscription();
+  public isLoading:boolean = false;
+
+  constructor(
+    private usersService: UsersService,
     private tokenService: TokenService,
     private socketService: SocketService,
     private messageService: MessageService,
-    private uiService: UiService) { }
+    private uiService: UiService,
+    private router: Router
+    ) { }
 
   ngOnInit(): void {
     this.uiService.showNavContent.next(true);
-    this.uiService.showSidebar.next(true);
+    this.uiService.showSidebar = true;
+    this.loadingListener();
     this.refreshListener();
     this.currentUser = this.tokenService.getTokenPayload().user;
     this.getUsers();
@@ -41,8 +49,10 @@ export class PeopleComponent implements OnInit, OnDestroy {
   };
 
   getUsers(): void {
+    this.uiService.loadingSubjet.next(true);
     this.usersService.getAllUsers().subscribe(users => {
       this.users = users;
+      this.uiService.loadingSubjet.next(false);
     });
   };
 
@@ -55,6 +65,7 @@ export class PeopleComponent implements OnInit, OnDestroy {
   };
 
   followUser(id: string): void {
+    this.uiService.loadingSubjet.next(true);
     this.usersService.followUser(id).subscribe((resp) => {
       this.socketService.emit('friend-list-refresh');
     });
@@ -79,11 +90,26 @@ export class PeopleComponent implements OnInit, OnDestroy {
   getUsersOnline() {
     this.onlineUsersObs$ = this.messageService.onlineUsers.subscribe(onlineUsers => {
        this.onlineUsers = onlineUsers;
+       console.log(this.onlineUsers);
     });
   };
 
   checkUserStatus(username:string) { 
     return this.onlineUsers.filter(user => user === username);
+  };
+
+  viewUser(user:any) { 
+    this.router.navigate(['/user/', user._id]);
+    if(this.currentUser._id !== user._id) { 
+      this.usersService.viewProfileNotifications(user._id).subscribe(resp => {
+        console.log(resp);
+        this.socketService.emit('friend-list-refresh');
+      });
+    };
+  };
+
+  loadingListener() { 
+    this.isLoadingSubs$ = this.uiService.loadingSubjet.subscribe(isLoading => this.isLoading = isLoading);
   };
 
   ngOnDestroy(): void {

@@ -8,6 +8,7 @@ import { StreamsComponent } from './streams.component';
 import { PostFormComponent } from '../post-form/post-form.component';
 import { PostComponent } from '../post/post.component';
 import { TopStreamsComponent } from '../top-streams/top-streams.component';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { TopStreamsComponent } from '../top-streams/top-streams.component';
     CommonModule,
     StreamsRoutingModule,
     ReactiveFormsModule,
+    FileUploadModule
   ],
 })
 export class StreamsModule { }

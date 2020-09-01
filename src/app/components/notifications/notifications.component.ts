@@ -26,7 +26,7 @@ export class NotificationsComponent implements OnInit {
 
   ngOnInit(): void {
     this.uiService.showNavContent.next(true);
-    this.uiService.showSidebar.next(true);
+    this.uiService.showSidebar = true;
     this.currentUser = this.tokenService.getTokenPayload().user;
     this.getUser();
     this.refreshPageListener();

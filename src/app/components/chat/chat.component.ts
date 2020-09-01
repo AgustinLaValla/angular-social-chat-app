@@ -9,12 +9,13 @@ import { MessageService } from 'src/app/services/message.service';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-  
-  constructor(private uiService: UiService) { }
+
+  constructor(private uiService: UiService) {
+    this.uiService.showSidebar = false;
+  };
 
   ngOnInit(): void {
     this.uiService.showNavContent.next(false);
-    this.uiService.showSidebar.next(false);
   };
 
 };

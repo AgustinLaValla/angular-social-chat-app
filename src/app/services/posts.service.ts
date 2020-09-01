@@ -37,4 +37,12 @@ export class PostsService {
         return this.http.post(`${this.url}/posts/add-comment`, {postId, comment});
     };
 
+    editPost(post:any) {
+        return this.http.put(`${this.url}/posts/edit-post`, post);
+    };
+
+    deletePost(id:string) { 
+        return this.http.delete(`${this.url}/posts/delete-post/${id}`);
+    };
+
 };

@@ -1,4 +1,4 @@
-<ul class="collection col s12 m10">
+<ul class="collection col s12 m10 animate fadeIn">
     <li class="collection-item avatar" *ngFor="let notification of notifications">
         <img class="circle" src="http://placehold.it/50x50">
         <span class="title">{{ notification.message }}</span>
@@ -16,6 +16,6 @@
     </li>
 </ul>
 
-<div class="row" *ngIf="!notifications.length">
+<div class="row animated fadeIn" *ngIf="!notifications.length">
     <div class="card pink darken-3 no-followers-card" >You have no notifications</div>
 </div>

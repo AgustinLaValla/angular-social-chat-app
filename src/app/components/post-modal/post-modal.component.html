@@ -1,0 +1,18 @@
+<div class="container">
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>Edit Post
+            <button (click)="deletePost()" class="secondary-content waves-effect waves-light btn red">
+                Delete Post
+            </button>
+            </h4>
+            <form [formGroup]="editForm" (ngSubmit)="submitEditedPost()">
+                <textarea formControlName="editedPost" class="materialize-textarea"></textarea>
+                <div class="modal-footer">
+                    <button type="button" (click)="postModalService.closeDialog()" class="btn deep-purple">Close</button> &nbsp;
+                    <button type="submit" class="btn deep-purple">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

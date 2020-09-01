@@ -20,11 +20,15 @@
                                         <div class="btn deep-purple waves-effect">
                                             <i class="material-icons">image</i>
                                             <span>Image</span>
-                                            <input type="file">
+                                            <input type="file"  
+                                                   ng2FileSelect 
+                                                   [uploader]="uploader" 
+                                                   (onFileSelected)="onFileSelected($event)"
+                                            >
                                         </div>
 
                                         <div class="file-path-wrapper">
-                                            <input class="file-path validate" type="text">
+                                            <input class="file-path validate" type="text" #imageDescription>
                                         </div>
 
                                     </div>

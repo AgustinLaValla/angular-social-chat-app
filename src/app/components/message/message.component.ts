@@ -19,14 +19,14 @@ export class MessageComponent implements OnInit, AfterViewInit, OnDestroy {
   private isTypingListener$ = new Subscription();
   private escapeListener$ = new Subscription();
   private onlineUsersObs$ = new Subscription();
-  
-  public onlineUsers:any;
+
+  public onlineUsers: any;
   public receivername: string;
-  private receiverData: any;
+  public receiverData: any;
   public user: any;
   public username: string;
   public message: string = '';
-  public isOnline:boolean = false;
+  public isOnline: boolean = false;
   public messages = [];
   public typingMessage;
   public typing: boolean = false;
@@ -55,7 +55,6 @@ export class MessageComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   ngAfterViewInit() {
-    console.log(this.onlineUsers)
     const params = {
       room1: this.username,
       room2: this.receivername
@@ -76,18 +75,18 @@ export class MessageComponent implements OnInit, AfterViewInit, OnDestroy {
       this.receivername = receiver.username;
       this.getAllMessages();
       this.getUsersOnline();
-    })
-  }
+    });
+  };
 
   getUsersOnline() {
     this.onlineUsersObs$ = this.messageService.onlineUsers.subscribe(onlineUsers => {
       console.log(onlineUsers);
       const container = document.querySelector('.nameCol');
       const isReceiverUserOnline = onlineUsers.find(user => user === this.receivername);
-      if(isReceiverUserOnline) { 
+      if (isReceiverUserOnline) {
         this.isOnline = true;
         (container as HTMLElement).style.margin = '0px';
-      } else { 
+      } else {
         this.isOnline = false;
         (container as HTMLElement).style.margin = '16px 0px';
       };
@@ -154,8 +153,6 @@ export class MessageComponent implements OnInit, AfterViewInit, OnDestroy {
       };
     });
   };
-
-
 
   ngOnDestroy(): void {
     this.paramsObs$.unsubscribe();

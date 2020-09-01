@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 })
 export class SideComponent implements OnInit, OnDestroy {
 
-  private user: any;
+  public user: any;
   public userData:any;
 
   private postsRefreshListener$ = new Subscription();

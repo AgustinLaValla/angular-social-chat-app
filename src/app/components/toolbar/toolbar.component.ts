@@ -26,6 +26,8 @@ export class ToolbarComponent implements OnInit, OnDestroy, AfterViewInit {
   private navContentSubs$ = new Subscription();
   private chatRefreshListener$ = new Subscription();
   public showNavContent: boolean = true;
+  public imageId:string;
+  public imageVersion:string;
 
   private pageRefreshObs$ = new Subscription();
 
@@ -52,8 +54,7 @@ export class ToolbarComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.getUser();
 
-    this.refreshPageListener();
-    this.refreshChatListener();
+    this.refreshListener();
 
     this.navContentSubs$ = this.uiService.showNavContent.subscribe(show => this.showNavContent = show);
   };
@@ -69,6 +70,9 @@ export class ToolbarComponent implements OnInit, OnDestroy, AfterViewInit {
       this.userData = user.notifications.reverse()
       this.chatList = user.chatList;
       this.unreadChatMessages();
+      this.imageId = user.picId;
+      this.imageVersion = user.picVersion;
+
     }, error => {
       if (!error.error.token) {
         this.tokenService.deleteToken();
@@ -105,12 +109,6 @@ export class ToolbarComponent implements OnInit, OnDestroy, AfterViewInit {
     return `/chat/${id}`;
   }
 
-  refreshPageListener() {
-    this.pageRefreshObs$ = this.socketService.listen('friend-list-refresh').subscribe(() => {
-      this.getUser();
-    });
-  };
-
   messageDate(data: Date) {
     return moment(data).calendar(null, {
       sameDay: '[Today]',
@@ -131,14 +129,18 @@ export class ToolbarComponent implements OnInit, OnDestroy, AfterViewInit {
     this.messageService.markAllMessagesAsRead().subscribe(() => this.socketService.emit('friend-list-refresh'));
   }
 
-  refreshChatListener() {
+  refreshListener() {
     this.chatRefreshListener$ = this.socketService.listen('refresh-chat').subscribe(() => this.getUser());
+    this.pageRefreshObs$ = this.socketService.listen('friend-list-refresh').subscribe(() => {
+      this.getUser();
+    });
   };
 
 
   logout() {
     this.tokenService.deleteToken();
     this.tokenService.deleteUserName();
+    this.socketService.emit('logout');
     this.router.navigate(['/login']);
   };
 
