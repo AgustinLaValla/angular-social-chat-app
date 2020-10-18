@@ -7,10 +7,11 @@ import { AuthTabsComponent } from './auth-tabs.component';
 
 import { SignupComponent } from '../signup/signup.component';
 import { LoginComponent } from '../login/login.component';
+import { GoogleButtonComponent } from './google-button/google-button.component';
 
 
 @NgModule({
-  declarations: [AuthTabsComponent, SignupComponent, LoginComponent],
+  declarations: [AuthTabsComponent, SignupComponent, LoginComponent, GoogleButtonComponent],
   imports: [
     CommonModule,
     AuthTabsRoutingModule,

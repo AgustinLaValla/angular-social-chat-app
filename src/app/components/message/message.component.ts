@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, Renderer2, ViewChildren, QueryList, HostListener } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UsersService } from 'src/app/services/users.service';
 import { TokenService } from 'src/app/services/token.service';
 import { MessageService } from 'src/app/services/message.service';
 import { SocketService } from 'src/app/services/socket.service';
-import { Subscription, Observable, fromEvent } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-message',
@@ -30,17 +30,27 @@ export class MessageComponent implements OnInit, AfterViewInit, OnDestroy {
   public messages = [];
   public typingMessage;
   public typing: boolean = false;
+  private messagesLimit: number = 20;
+  private totalMessages: number = 0;
+  private messagesRequestedFromScroll: boolean = false;
+  private firstRequest: boolean = true;
+  private lastScrollHeight: number = 0;
 
   public showEmojiPicker: boolean = false;
 
-  @ViewChild('scroller') public scroller: ElementRef;
+  @ViewChild('scrollFrame') scrollFrame: ElementRef<HTMLDivElement>;
+  @ViewChildren('messagesBox') messagesBox: QueryList<ElementRef>;
+  @ViewChild('nameCol') nameCol: ElementRef<HTMLElement>;
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private tokenService: TokenService,
-    private userService: UsersService,
+    public userService: UsersService,
     private messageService: MessageService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private renderer: Renderer2,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -49,9 +59,9 @@ export class MessageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.refreshChatListener();
     this.isTypingListener();
     this.closePickerHandler();
-    this.paramsObs$ = this.activatedRoute.params.subscribe(params => {
-      this.getUserById(params['id']);
-    })
+    this.paramsObs$ = this.activatedRoute.params.pipe(
+      tap({ next: params => this.getUserById(params['id']) })
+    ).subscribe()
   };
 
   ngAfterViewInit() {
@@ -60,59 +70,92 @@ export class MessageComponent implements OnInit, AfterViewInit, OnDestroy {
       room2: this.receivername
     };
     this.socketService.emit('join chat', params);
+
+    this.messagesBox.changes.subscribe(() => this.scrollToBottom());
   };
 
-  getUserByName(username: string) {
-    this.userService.getUserByUsername(username).subscribe(receiver => {
-      this.receiverData = receiver;
-      this.getAllMessages();
-    });
-  };
+  private scrollToBottom(): void {
+    this.renderer.selectRootElement(window).scroll({
+      top: !this.messagesRequestedFromScroll
+        ? this.scrollFrame.nativeElement.scrollHeight
+        : this.scrollFrame.nativeElement.scrollHeight - this.lastScrollHeight,
+      left: 0,
+      behavior: !this.messagesRequestedFromScroll ? 'smooth' : 'auto'
+    })
+    this.messagesRequestedFromScroll = false;
+  }
 
   getUserById(id: string) {
-    this.userService.getUserById(id).subscribe(receiver => {
-      this.receiverData = receiver;
-      this.receivername = receiver.username;
-      this.getAllMessages();
-      this.getUsersOnline();
-    });
+    this.userService.getUserById(id).pipe(
+      map(({user}) => (
+        this.receiverData = user,
+        this.receivername = user.username,
+        this.getAllMessages(),
+        this.getUsersOnline()
+      ))
+    ).subscribe();
   };
 
   getUsersOnline() {
-    this.onlineUsersObs$ = this.messageService.onlineUsers.subscribe(onlineUsers => {
-      console.log(onlineUsers);
-      const container = document.querySelector('.nameCol');
-      const isReceiverUserOnline = onlineUsers.find(user => user === this.receivername);
-      if (isReceiverUserOnline) {
-        this.isOnline = true;
-        (container as HTMLElement).style.margin = '0px';
-      } else {
-        this.isOnline = false;
-        (container as HTMLElement).style.margin = '16px 0px';
-      };
-    });
+    this.onlineUsersObs$ = this.messageService.onlineUsers.pipe(
+      map((onlineUsers) => onlineUsers.find(user => user === this.receivername)),
+      map(isReceiverUserOnline => {
+        if (isReceiverUserOnline) {
+          this.isOnline = true;
+          this.renderer.setStyle(this.nameCol.nativeElement, 'margin', 0);
+        } else {
+          this.isOnline = false;
+          this.renderer.setStyle(this.nameCol.nativeElement, 'margin', '16px 0px');
+        };
+      })
+    ).subscribe();
   };
 
 
   getAllMessages() {
-    this.messageService.getAllMessages(this.user._id, this.receiverData._id).subscribe((resp) => {
-      this.messages = resp[0].message;
-      setTimeout(() => this.scroller.nativeElement.scrollTop = this.scroller.nativeElement.scrollHeight, 50);
-    });
+    console.log('called');
+    this.messageService.getAllMessages(this.user._id, this.receiverData._id, this.messagesLimit).pipe(
+      map((resp: { messages: any[], total: number }) => {
+        this.messages = resp.messages[0].message;
+        this.totalMessages = resp.total;
+        if (this.firstRequest) {
+          this.firstRequest = false;
+        }
+      })
+    ).subscribe();
   };
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll(event) {
+    if (this.firstRequest) return;
+    const scrollTop: number = event.target.scrollingElement.scrollTop;
+    if (scrollTop === 0 && this.messagesLimit < this.totalMessages) {
+      this.messagesLimit += 20;
+      this.messagesRequestedFromScroll = true;
+      this.lastScrollHeight = this.scrollFrame.nativeElement.scrollHeight;
+      this.getAllMessages();
+    }
+  }
 
   sendMessage() {
     if (this.message.length > 0) {
-      this.messageService.sendMessage(this.user._id, this.receiverData._id, this.receivername, this.message).subscribe(() => {
-        this.message = '';
-        this.socketService.emit('refresh-chat');
-      });
+      this.messageService.sendMessage(this.user._id, this.receiverData._id, this.receivername, this.message).pipe(
+        map(() => {
+          this.message = '';
+          if (this.messagesLimit <= this.totalMessages) {
+            this.messagesLimit++;
+          }
+        }),
+        tap(({ next: () => this.socketService.emit('refresh-chat') }))
+      ).subscribe();
 
     };
   };
 
   refreshChatListener() {
-    this.chatRefreshListener$ = this.socketService.listen('refresh-chat').subscribe(() => this.getAllMessages());
+    this.chatRefreshListener$ = this.socketService.listen('refresh-chat').pipe(
+      tap({ next: () => this.getAllMessages() })
+    ).subscribe();
   };
 
   isTyping(): void {
@@ -134,12 +177,14 @@ export class MessageComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   isTypingListener() {
-    this.isTypingListener$ = this.socketService.listen('is-typing').subscribe((data) => {
-      if (data['sender'] === this.receivername) {
-        this.typing = data['typing'];
-        setTimeout(() => this.scroller.nativeElement.scrollTop = this.scroller.nativeElement.scrollHeight, 50);
-      };
-    });
+    this.isTypingListener$ = this.socketService.listen('is-typing').pipe(
+      map(data => {
+        if (data['sender'] === this.receivername) {
+          this.typing = data['typing'];
+          this.scrollToBottom();
+        };
+      })
+    ).subscribe();
   };
 
   addEmoji(event) {
@@ -153,6 +198,12 @@ export class MessageComponent implements OnInit, AfterViewInit, OnDestroy {
       };
     });
   };
+
+  goToUserProfile() {
+    if (this.receiverData) {
+      this.router.navigate(['/user', this.receiverData._id]);
+    }
+  }
 
   ngOnDestroy(): void {
     this.paramsObs$.unsubscribe();

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, ElementRef, ViewChild } from '@angular/core';
 import { URL } from '../../../config/url.config';
 import { FileUploader } from 'ng2-file-upload';
 import { UsersService } from 'src/app/services/users.service';
@@ -6,7 +6,7 @@ import { TokenService } from 'src/app/services/token.service';
 import { SocketService } from 'src/app/services/socket.service';
 import { Subscription } from 'rxjs';
 import { UiService } from 'src/app/services/ui.service';
-import * as M from 'materialize-css';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-images',
@@ -17,7 +17,6 @@ export class ImagesComponent implements OnInit, OnDestroy {
 
   public user: any;
   public userData;
-  private url = `${URL}/upload-image`;
   public uploader: FileUploader = new FileUploader({
     url: URL,
     disableMultipart: true
@@ -30,13 +29,19 @@ export class ImagesComponent implements OnInit, OnDestroy {
   private loadingObs$ = new Subscription();
   public isLoading: boolean = false;
 
+  @ViewChild('filePath') filePath: ElementRef<HTMLInputElement>;
+  @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement>;
+
   constructor(
     private usersService: UsersService,
     private tokenService: TokenService,
     private socketService: SocketService,
-    private uiService: UiService
+    private uiService: UiService,
+    private renderer: Renderer2
   ) {
-    this.loadingObs$ = this.uiService.loadingSubjet.subscribe(isLoading => this.isLoading = isLoading);
+    this.loadingObs$ = this.uiService.loadingSubjet.subscribe({
+      next: isLoading => this.isLoading = isLoading
+    });
   };
 
   ngOnInit(): void {
@@ -46,13 +51,20 @@ export class ImagesComponent implements OnInit, OnDestroy {
   };
 
   getUser() {
-    this.usersService.getUserById(this.user._id).subscribe((resp) => {
-      this.images = resp.images;
-      this.userData = resp;
-    });
+    this.usersService.getUserById(this.user._id).pipe(
+      map((resp) => {
+        this.images = resp.images;
+        this.userData = resp;
+      })
+    ).subscribe();
   };
 
   async onFileSelected(event: FileList) {
+    if (event[0].type.indexOf('image') < 0) {
+      this.uiService.toastMessage('Only jpg, png, jpeg and gif are accepted');
+      this.fileInput.nativeElement.value = '';
+      return;
+    }
     const file: File = event[0];
     try {
       const result = await this.readAsBase64(file);
@@ -77,36 +89,49 @@ export class ImagesComponent implements OnInit, OnDestroy {
 
   upload() {
     this.uiService.loadingSubjet.next(true);
-    this.usersService.addImage(this.selectedFile).subscribe((resp) => {
-      const filePath = <HTMLInputElement>document.getElementById('filePath');
-      filePath.value = '';
-      this.socketService.emit('refresh-images');
-      this.uiService.loadingSubjet.next(false);
-    },
-      error => console.log(error));
+    this.usersService.addImage(this.selectedFile).pipe(
+      tap({
+        next: () => {
+          this.renderer.setValue(this.filePath.nativeElement, '');
+          this.socketService.emit('refresh-images');
+          this.uiService.loadingSubjet.next(false);
+        }
+      })
+    ).subscribe({
+      error: error => console.log(error)
+    });
   };
 
   imageRefreshListener() {
-    this.imageRefresherObs$ = this.socketService.listen('refresh-images').subscribe(() => this.getUser());
+    this.imageRefresherObs$ = this.socketService.listen('refresh-images').subscribe({
+      next: () => this.getUser()
+    });
   };
 
   setAsProfileImage(image) {
-    this.usersService.udpateProfilePic(image).subscribe(() => {
-      this.socketService.emit('profile-pic-updated');
-      this.getUser();
-  });
+    this.uiService.loadingSubjet.next(true);
+    this.usersService.udpateProfilePic(image).pipe(
+      tap(() => {
+        this.uiService.loadingSubjet.next(false);
+        this.socketService.emit('profile-pic-updated');
+        this.getUser();
+      })
+    ).subscribe();
   };
 
 
   deleteImage(image) {
-    
+
     this.uiService.loadingSubjet.next(true);
-    this.usersService.deleteImage(image).subscribe(() => {
-      this.socketService.emit('refresh-images');
-      this.uiService.loadingSubjet.next(false);
-      console.log(image.imgId, this.userData)
-      if(image.imgId === this.userData.picId) this.socketService.emit('profile-pic-updated');
-    });
+    this.usersService.deleteImage(image).pipe(
+      tap(() => {
+        this.socketService.emit('refresh-images');
+        this.uiService.loadingSubjet.next(false);
+        if (image.imgId === this.userData.picId) {
+          this.socketService.emit('profile-pic-updated')
+        };
+      })
+    ).subscribe();
   };
 
   ngOnDestroy(): void {

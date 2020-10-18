@@ -6,6 +6,8 @@ import { PostsService } from 'src/app/services/posts.service';
 import { Subscription } from 'rxjs';
 import { SocketService } from 'src/app/services/socket.service';
 import * as moment from 'moment/moment';
+import { map, tap } from 'rxjs/operators';
+import { UsersService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'app-comments',
@@ -19,16 +21,19 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   public commentsArray: any[] = [];
 
-  public post:any;
+  public post: any;
 
   private paramsListener$ = new Subscription();
   private commentRefreshListener$ = new Subscription();
 
-  constructor(private activatedRoute: ActivatedRoute,
+  constructor(
+    private activatedRoute: ActivatedRoute,
     private uiService: UiService,
     private fb: FormBuilder,
     private postService: PostsService,
-    private socketService:SocketService) { }
+    private socketService: SocketService,
+    public userService: UsersService
+  ) { }
 
   ngOnInit(): void {
     this.uiService.showNavContent.next(false);
@@ -38,10 +43,12 @@ export class CommentsComponent implements OnInit, OnDestroy {
   };
 
   getPostIdFromRoutesNodes() {
-    this.paramsListener$ = this.activatedRoute.params.subscribe((params: Params) => {
-      this.postId = params['id'];
-      this.getPost();
-    });
+    this.paramsListener$ = this.activatedRoute.params.pipe(
+      map((params: Params) => {
+        this.postId = params['id'];
+        this.getPost();
+      })
+    ).subscribe();
   };
 
   initForm() {
@@ -51,25 +58,33 @@ export class CommentsComponent implements OnInit, OnDestroy {
   };
 
   addComment() {
-    this.postService.addComment(this.postId, this.commentForm.value.comment).subscribe((resp) => {
-      this.commentForm.reset();
-      this.socketService.emit('refresh-posts-comments');
-    });
+    this.postService.addComment(this.postId, this.commentForm.value.comment).pipe(
+      tap({
+        next: () => {
+          this.commentForm.reset();
+          this.socketService.emit('refresh-posts-comments');
+        }
+      })
+    ).subscribe();
   };
 
   getPost() {
-    this.postService.getPost(this.postId).subscribe((post) => {
-      this.commentsArray = post.comments.reverse();
-      this.post = post;
-    });
+    this.postService.getPost(this.postId).pipe(
+      map((post) => {
+        this.commentsArray = post.comments.reverse();
+        this.post = post;
+      })
+    ).subscribe();
   };
 
   initCommentRefreshListener() {
-    this.commentRefreshListener$ = this.socketService.listen('refresh-posts-comments').subscribe(() => {
-      this.getPost();
-    });
+    this.commentRefreshListener$ = this.socketService.listen('refresh-posts-comments').pipe(
+      tap({
+        next: () => this.getPost()
+      })
+    ).subscribe();
   };
-  
+
   timeFromNow(time: Date) {
     return moment(time).fromNow();
   };

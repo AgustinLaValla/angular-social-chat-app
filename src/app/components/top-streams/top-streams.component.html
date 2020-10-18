@@ -1,6 +1,6 @@
 <ul class="collection col s12 m12 l10"  *ngFor="let post of posts; let i = index">
     <li class="collection-item avatar">
-        <img src="https://res.cloudinary.com/dnfm4fq8d/image/upload/v{{post.user.picVersion}}/{{post.user.picId}}" class="circle">
+        <img [src]="userService.getUserProfilePic(post.user)" class="circle" style="object-fit: cover !important;">
         <span class="title">{{post.username}}</span>
         <p class="time ">{{ timeFromNow(post.createdAt) }}<br>
             <!-- Country -->
@@ -21,13 +21,22 @@
 
                 <div class="card-action">
 
-                    <i (click)="likedPost(post)" 
+                    <i 
+                        (click)="likedPost(post)" 
                         class="material-icons" 
                         [ngClass]="{ 'notLiked' : (!checkInLikesArray(post.likes)), 'liked': (checkInLikesArray(post.likes))}"
-                    >   thumb_up</i>
+                    >   
+                        thumb_up
+                    </i>
                     <span class="iconSpan">{{post.totalLikes}}</span>
 
-                    <i class="material-icons" [ngClass]="{ 'notLiked' : (!checkInLikesArray(post.comments)), 'liked': (checkInLikesArray(post.likes))}" (click)="openCommentBox(post)">chat</i>
+                    <i 
+                        class="material-icons" 
+                        [ngClass]="{ 'notLiked' : (!checkInLikesArray(post.comments)), 'liked': (checkInLikesArray(post.comments))}" 
+                        (click)="openCommentBox(post)"
+                    >
+                        chat
+                    </i>
                     <span class="iconSpan">{{post.comments.length}}</span>
 
                 </div>

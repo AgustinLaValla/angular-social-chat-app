@@ -4,6 +4,7 @@ import { UsersService } from 'src/app/services/users.service';
 import { SocketService } from 'src/app/services/socket.service';
 import { Subscription } from 'rxjs';
 import { UiService } from 'src/app/services/ui.service';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-following',
@@ -19,12 +20,13 @@ export class FollowingComponent implements OnInit, OnDestroy {
   private listRefreshObs$ = new Subscription();
 
   private isLoadingSubs$ = new Subscription();
-  public isLoading:boolean = false;
+  public isLoading: boolean = false;
 
-  constructor(private tokenService: TokenService,
-    private userService: UsersService,
+  constructor(
+    private tokenService: TokenService,
+    public userService: UsersService,
     private socketService: SocketService,
-    private uiService:UiService
+    private uiService: UiService
   ) { }
 
   ngOnInit(): void {
@@ -38,32 +40,35 @@ export class FollowingComponent implements OnInit, OnDestroy {
 
   getUser() {
     this.uiService.loadingSubjet.next(true);
-    this.userService.getUserById(this.currentUser._id).subscribe((user) => {
-      this.usersFollowed = user.following;
-      this.uiService.loadingSubjet.next(false);
-    });
+    this.userService.getUserById(this.currentUser._id).pipe(
+      map(({user}) => this.usersFollowed = user.following),
+      tap({ next: () => this.uiService.loadingSubjet.next(false) })
+    ).subscribe();
   };
 
   unfollowUser(id: string) {
     this.uiService.loadingSubjet.next(true);
-    this.userService.unFollowUser(id).subscribe(() => {
-      this.socketService.emit('friend-list-refresh');
-    });
+    this.userService.unFollowUser(id).pipe(
+      tap({ next: () => this.socketService.emit('friend-list-refresh') })
+    ).subscribe();
   };
 
   friendListRefreshListener() {
-    this.listRefreshObs$ = this.socketService.listen('friend-list-refresh').subscribe(() => {
-      this.getUser();
-    });
+    this.listRefreshObs$ = this.socketService.listen('friend-list-refresh').pipe(
+      tap({ next: () => this.getUser() })
+    ).subscribe();
   };
 
-  loadingListener() { 
-    this.isLoadingSubs$ = this.uiService.loadingSubjet.subscribe(isLoading => this.isLoading = isLoading);
+  loadingListener() {
+    this.isLoadingSubs$ = this.uiService.loadingSubjet.subscribe({
+      next: isLoading => this.isLoading = isLoading
+    });
   };
 
 
   ngOnDestroy(): void {
     this.listRefreshObs$.unsubscribe();
+    this.isLoadingSubs$.unsubscribe();
   };
 
 };

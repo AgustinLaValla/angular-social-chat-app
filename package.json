@@ -21,7 +21,6 @@
     "@angular/router": "~9.1.6",
     "@ctrl/ngx-emoji-mart": "^3.1.0",
     "@hapi/joi": "^17.1.1",
-    "lodash": "^4.17.15",
     "materialize-css": "^1.0.0-rc.2",
     "moment": "^2.25.3",
     "ng2-file-upload": "^1.4.0",

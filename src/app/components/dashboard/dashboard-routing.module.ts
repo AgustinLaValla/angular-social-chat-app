@@ -11,7 +11,6 @@ const routes: Routes = [{
     { path: 'following', loadChildren: () => import('../following/following.module').then(m => m.FollowingModule) },
     { path: 'followers', loadChildren: () => import('../followers/followers.module').then(m => m.FollowersModule) },
     { path: 'notifications', loadChildren: () => import('../notifications/notifications.module').then(m => m.NotificationsModule) },
-    { path: 'chat/:id', loadChildren: () => import('../chat/chat.module').then(m => m.ChatModule) },
     { path: 'images', loadChildren: () => import('../images/images.module').then(m => m.ImagesModule) },
     { path: 'user/:id', loadChildren: () => import('../view-user/view-user.module').then(m => m.ViewUserModule) },
     { path: 'account/password', loadChildren: () => import('../change-password/change-password.module').then(m => m.ChangePasswordModule) },

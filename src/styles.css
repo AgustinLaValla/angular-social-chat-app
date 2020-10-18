@@ -54,7 +54,19 @@
     background-color: #673ab7;
   }
 
-  /*--------------------------------------- POINTER -------------..--------------------------*/
+  /*--------------------------------------- POINTER -----------------------------------------*/
   .pointer { 
     cursor: pointer;
+  }
+
+    /*--------------------------------- MATERIALIZE TOAST -----------------------------------*/
+
+  .toast-style {
+    top: auto !important;
+    right: auto !important;
+    bottom: 10%;
+    left:7%;
+    word-wrap: break-word;
+    display: block;
+    max-width: 90vw;
   }

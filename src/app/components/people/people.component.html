@@ -8,21 +8,21 @@
             <a>
                 <div class="card-image imgDiv pointer" (click)="viewUser(user)">
                     <img class="imgCircle responsive-img"
-                        src="https://res.cloudinary.com/dnfm4fq8d/image/upload/v{{user.picVersion}}/{{user.picId}}">
+                        src="{{usersService.getUserProfilePic(user)}}">
                 </div>
-                <div class="card-action">
+                <div class="card-action" style="padding: 16px !important;">
                     <h3 class="card-title pointer" style="color:#673ab7;" (click)="viewUser(user)">
                         {{ user.username }}
                         <i *ngIf="checkUserStatus(user.username).length > 0" class="fa fa-circle"></i>
                     </h3>
                     <p *ngIf="user.city && user.country" style="color:#673ab7;">{{user.city}} {{user.country}}</p>
                     <button *ngIf="!checkInFollowingArray(user._id)" (click)="followUser(user._id)"
-                        class="btn deep-purple"> Follow
+                        class="btn deep-purple" style="font-size: 11px;"> Follow
                     </button>
-                    <button *ngIf="checkInFollowingArray(user._id)" class="btn deep-purple following" disabled>
+                    <button *ngIf="checkInFollowingArray(user._id)" class="btn deep-purple following" disabled style="font-size: 11px;">
                         Following
                     </button>
-                    <a class="secondary-content" [routerLink]="['/chat', user._id]">
+                    <a class="secondary-content" [routerLink]="['/chat', user._id]" style="margin: 0;">
                         <i class="material-icons">chat</i>
                     </a>
                 </div>

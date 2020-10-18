@@ -8,16 +8,20 @@ import { map } from 'rxjs/operators';
 
 export class PostsService {
 
-    private url: string = URL
+    private url: string = URL;
+    public postLimit: number = 10;
+    public totalPost: number = 0;
+    public topPostsLimit: number = 10;
+    public totalTopPost: number = 0;
 
     constructor(private http: HttpClient) { }
 
     getAllPost(): Observable<any> {
-        return this.http.get(`${this.url}/posts`).pipe(map((resp) => resp['posts']));
+        return this.http.get(`${this.url}/posts?limit=${this.postLimit}`);
     };
 
     getTopPosts(): Observable<any> { 
-        return this.http.get(`${this.url}/posts/top/get-all`).pipe(map((resp) => resp['posts']))
+        return this.http.get(`${this.url}/posts/top/get-all?limit=${this.topPostsLimit}`);
     }
 
     getPost(id:string): Observable<any> { 

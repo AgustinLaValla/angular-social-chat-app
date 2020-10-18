@@ -14,7 +14,9 @@ export class AuthTabsComponent implements OnInit, OnDestroy {
   public isLoading: boolean = false;
 
   constructor(private uiService: UiService) {
-    this.loadingSubs$ = this.uiService.loadingSubjet.subscribe(isLoading => this.isLoading = isLoading);
+    this.loadingSubs$ = this.uiService.loadingSubjet.subscribe({
+      next: isLoading => this.isLoading = isLoading
+    });
   }
 
   ngOnInit(): void {
@@ -22,7 +24,7 @@ export class AuthTabsComponent implements OnInit, OnDestroy {
     const materialTabs = new M.Tabs(tabs, {});
   };
 
-  
+
   ngOnDestroy(): void {
     this.loadingSubs$.unsubscribe();
   };

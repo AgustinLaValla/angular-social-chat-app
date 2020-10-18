@@ -1,7 +1,7 @@
 
   
   .card-action {
-    height: 200px !important;
+    min-height: 200px !important;
     border: 1px solid #e7e7e7;
   }
   
@@ -17,6 +17,7 @@
     border-radius: 50% !important;
     margin: 0 auto !important;
     top: 20px !important;
+    object-fit: cover;
   }
   
   .active {

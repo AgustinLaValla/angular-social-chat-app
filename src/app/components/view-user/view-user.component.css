@@ -46,7 +46,7 @@
 }
 
 .card_image {
-  width: 200px;
+  max-width: 90%;
   height: auto !important;
 }
 

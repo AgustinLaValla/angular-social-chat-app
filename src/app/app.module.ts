@@ -14,6 +14,7 @@ import { PostModalComponent } from './components/post-modal/post-modal.component
 import { ReactiveFormsModule } from '@angular/forms';
 import { socketURL } from '../config/url.config';
 
+
 const config: SocketIoConfig = {
 url:socketURL , options:{}
 };
@@ -21,7 +22,7 @@ url:socketURL , options:{}
 @NgModule({
   declarations: [
     AppComponent,
-    PostModalComponent
+    PostModalComponent,
   ],
   imports: [
     BrowserModule,

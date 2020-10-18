@@ -3,11 +3,11 @@
 <div class="container" style="margin-top:30px">
     <div class="row">
 
-        <div class="col s12 m4 l3" *ngIf="uiService.showSidebar">
+        <div class="col s12 l3" *ngIf="uiService.showSidebar">
             <app-side></app-side>
         </div>
 
-        <div class="col s12 m8 l9">
+        <div class="col s12 l9">
             <router-outlet></router-outlet>
         </div>
 

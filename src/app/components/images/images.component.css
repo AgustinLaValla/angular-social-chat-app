@@ -14,14 +14,11 @@
 }
 
 .imgCircle {
-  border-radius: 50%;
-}
-
-.imgCircle {
   width: 160px !important;
   height: 160px !important;
   border-radius: 50%;
   margin: 0 auto !important;
+  object-fit: cover;
 }
 
 .imgBtn {

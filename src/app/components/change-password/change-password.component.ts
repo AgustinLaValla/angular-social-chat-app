@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { UsersService } from 'src/app/services/users.service';
 import { UiService } from 'src/app/services/ui.service';
+import { catchError, map, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-change-password',
@@ -12,7 +14,11 @@ export class ChangePasswordComponent implements OnInit {
 
   public passwordForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private userService:UsersService, private uiService:UiService) { }
+  constructor(
+    private fb: FormBuilder,
+    private userService: UsersService,
+    private uiService: UiService
+  ) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -23,43 +29,41 @@ export class ChangePasswordComponent implements OnInit {
     this.passwordForm = this.fb.group({
       password: ['', Validators.required],
       newPassword: ['', [Validators.required, Validators.pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))]],
-      confirmPassword: ['', Validators.required]
-    }, { validators: this.validate.bind(this) });
+      confirmPassword: ['', [Validators.required]]
+    });
+    this.passwordForm.get('confirmPassword').setValidators(this.validate.bind(this))
   };
 
 
-  validate(passFormGroup: FormGroup) {
-    const new_password = passFormGroup.controls.newPassword.value;
-    const confirm_password = passFormGroup.controls.confirmPassword.value;
-
-    if (confirm_password && confirm_password.length <= 0) return null;
-
-    if (new_password !== confirm_password) {
-      return {
-        doesNotMatch: true
-      };
-    };
-
-    return null;
+  validate(control: AbstractControl): { [key: string]: boolean } {
+    return control.value !== this.passwordForm.get('newPassword').value
+      ? { doesNotMatch: true } : null;
   };
+
 
   setErrorStyle() {
     const input = document.getElementById('confirm-password');
-    this.passwordForm.valueChanges.subscribe(() => {
-      if(this.passwordForm.errors) { 
-        input.className = 'invalid';
-      } else { 
-        input.className = 'validate';
-      };
-    });
+    this.passwordForm.valueChanges.pipe(
+      map(() => {
+        if (this.passwordForm.errors) {
+          input.className = 'invalid';
+        } else {
+          input.className = 'validate';
+        };
+      })
+    ).subscribe();
   };
 
-  changePassword() { 
-    this.userService.changePassword(this.passwordForm.value).subscribe((resp) => {
-      this.passwordForm.reset();
-      this.passwordForm.updateValueAndValidity();
-      console.log(this.passwordForm.valid);
-    } , error => this.uiService.errorHandler(error)) ;
+  changePassword() {
+    this.userService.changePassword(this.passwordForm.value).pipe(
+      tap({
+        next: () => (
+          this.passwordForm.reset(),
+          this.passwordForm.updateValueAndValidity()
+        )
+      }),
+      catchError(error => of(this.uiService.errorHandler(error)))
+    ).subscribe();
   };
 
 };

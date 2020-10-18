@@ -7,6 +7,7 @@ import { MessageComponent } from '../message/message.component';
 import { FormsModule } from '@angular/forms';
 import { PickerModule } from '@ctrl/ngx-emoji-mart'
 
+
 @NgModule({
   declarations: [ChatComponent, MessageComponent],
   imports: [

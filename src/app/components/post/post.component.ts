@@ -1,15 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { PostsService } from 'src/app/services/posts.service';
 import * as moment from 'moment/moment';
 import * as M from 'materialize-css';
 import { SocketService } from 'src/app/services/socket.service';
-import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { TokenService } from 'src/app/services/token.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { isNullOrUndefined } from 'util';
 import { PostModalService } from '../post-modal/post-modal.service';
+import { UsersService } from 'src/app/services/users.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-post',
@@ -28,18 +27,18 @@ export class PostComponent implements OnInit, OnDestroy {
   public postId: string;
 
   private modal: any;
-  
+
   constructor(
     private postsService: PostsService,
     private socketService: SocketService,
     private router: Router,
     private tokenService: TokenService,
-    private fb: FormBuilder,
-    public postModalService:PostModalService) {
-    this.socketListener = this.socketService.listen('refresh-posts').subscribe(() => this.getAllPosts());
-  }
+    public postModalService: PostModalService,
+    public userService: UsersService
+  ) { }
 
   ngOnInit(): void {
+    this.setSocketListener();
     this.getAllPosts();
     this.username = this.tokenService.getUserName();
     this.userId = this.tokenService.getTokenPayload().user._id;
@@ -49,27 +48,34 @@ export class PostComponent implements OnInit, OnDestroy {
   };
 
   getAllPosts() {
-    this.postsService.getAllPost().subscribe((posts) => {
-      this.posts = posts;
-      console.log(this.posts);
-    }, error => {
-      if (!error.error.token) {
-        this.tokenService.deleteToken();
-        this.tokenService.deleteUserName();
-        this.router.navigate(['/login']);
-      };
-    });
+    this.postsService.getAllPost().subscribe({
+      next: (resp) => (
+        this.posts = resp.posts,
+        this.postsService.totalPost = resp.total
+      ),
+      error: error => {
+        if (!error.error.token) {
+          this.tokenService.deleteToken();
+          this.tokenService.deleteUserName();
+          this.router.navigate(['/login']);
+        }
+      }
+    })
   };
 
   likedPost(post: any) {
     this.like = !this.like;
-    this.postsService.addLike(post).subscribe(resp => {
-      this.socketService.emit('refresh-posts', {});
-    });
+    this.postsService.addLike(post).pipe(
+      tap({
+        next: () => {
+          this.socketService.emit('refresh-posts', {});
+        }
+      })
+    ).subscribe();
   };
 
-  checkInLikesArray(array) {
-    return _.some(array, { username: this.username });
+  checkInLikesArray(array: { username, _id }[]) {
+    return array.find(data => data.username === this.username);
   }
 
   timeFromNow(time: moment.Moment) {
@@ -81,9 +87,32 @@ export class PostComponent implements OnInit, OnDestroy {
     this.router.navigate(['post', post._id]);
   }
 
+  @HostListener('window:scroll', ['$event'])
+  onScroll(event) {
+    const scrollingElement = event.target.scrollingElement;
+    if (scrollingElement.scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight) {
+      if (this.postsService.postLimit < this.postsService.totalPost) {
+        this.postsService.postLimit += 10;
+        this.getAllPosts();
+      }
+    }
+  }
+
+  setSocketListener() {
+    this.socketListener = this.socketService.listen('refresh-posts').subscribe({
+      next: ({newPostAdded}) => {
+        if(newPostAdded) {
+          this.postsService.postLimit += 1;
+        }
+        this.getAllPosts()
+      }
+    });
+  }
 
   ngOnDestroy(): void {
     this.socketListener.unsubscribe();
+    this.postsService.postLimit = 10;
+    this.postsService.totalPost = 0;
   };
 
 }

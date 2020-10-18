@@ -2,3 +2,12 @@
     color:#555;
     font-size: 20px;
 } 
+
+.progress{
+    background-color: rgba(103, 58, 183, .3);
+    padding: 0 !important; 
+    margin: 3px !important;
+  }
+  .indeterminate{
+    background-color:#673ab7
+  }

@@ -1,6 +1,10 @@
-<ul class="collection col s12 m10 animate fadeIn">
+<div *ngIf="isLoading" class="progress" >
+    <div class="indeterminate"></div>
+</div>
+
+<ul class="collection col s12 m10 animate fadeIn" *ngIf="notifications.length">
     <li class="collection-item avatar" *ngFor="let notification of notifications">
-        <img class="circle" src="http://placehold.it/50x50">
+        <img class="circle" [src]="usersService.getUserProfilePic(notification.senderId)" style="object-fit: cover;">
         <span class="title">{{ notification.message }}</span>
         <a  class="secondary-content">
             <i *ngIf="!notification.read" class="material-icons">brightness_1</i>

@@ -2,5 +2,9 @@
     bottom: 0 !important;
     margin-bottom: 0px !important;
     position: relative;
-    max-height: 700px !important;
+    /* max-height: 700px !important; */
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    height: 100vh !important;
 }

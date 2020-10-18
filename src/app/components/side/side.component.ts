@@ -3,6 +3,7 @@ import { TokenService } from 'src/app/services/token.service';
 import { SocketService } from 'src/app/services/socket.service';
 import { UsersService } from 'src/app/services/users.service';
 import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-side',
@@ -12,7 +13,8 @@ import { Subscription } from 'rxjs';
 export class SideComponent implements OnInit, OnDestroy {
 
   public user: any;
-  public userData:any;
+  public userData: any;
+  public totalPosts: number = 0;
 
   private postsRefreshListener$ = new Subscription();
   private usersRefreshListener$ = new Subscription();
@@ -21,7 +23,7 @@ export class SideComponent implements OnInit, OnDestroy {
     private tokenService: TokenService,
     private userService: UsersService,
     private socketService: SocketService
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.user = this.tokenService.getTokenPayload().user;
@@ -30,12 +32,26 @@ export class SideComponent implements OnInit, OnDestroy {
   };
 
   getUser() {
-    this.userService.getUserById(this.user._id).subscribe((userData) => this.userData = userData);
+    this.userService.getUserById(this.user._id).subscribe({
+      next: ({user, totalPosts}) => (
+        this.userData = user,
+        this.totalPosts = totalPosts
+      )
+    });
   };
 
   initSocketListeners() {
-    this.postsRefreshListener$ = this.socketService.listen('refresh-posts').subscribe(() => this.getUser());
-    this.usersRefreshListener$ = this.socketService.listen('friend-list-refresh').subscribe(() => this.getUser());
+    this.postsRefreshListener$ = this.socketService.listen('refresh-posts').pipe(
+      tap({
+        next: () => this.getUser()
+      })
+    ).subscribe();
+    
+    this.usersRefreshListener$ = this.socketService.listen('friend-list-refresh').pipe(
+      tap({
+        next: () => this.getUser()
+      })
+    ).subscribe();
   };
 
   ngOnDestroy(): void {

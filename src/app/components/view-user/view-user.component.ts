@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { UiService } from 'src/app/services/ui.service';
 import * as M from 'materialize-css';
 import * as moment from 'moment/moment';
@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PostModalService } from '../post-modal/post-modal.service';
 import { SocketService } from 'src/app/services/socket.service';
 import { Subscription } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-view-user',
@@ -26,26 +27,35 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
   public followers = [];
 
   public user: any;
+  private userId: string;
 
-  public currentUserId:string;
-  private viwedUserId:string;
+  public currentUserId: string;
+  private viwedUserId: string;
+
+  private postsLimit: number = 10;
+  private totalPosts: number = 0;
 
   constructor(
     private uiService: UiService,
-    private userService: UsersService,
+    public userService: UsersService,
     private activatedRoute: ActivatedRoute,
-    private tokenServie:TokenService,
-    public postModelService:PostModalService,
-    private socketService:SocketService
+    private tokenServie: TokenService,
+    public postModelService: PostModalService,
+    private socketService: SocketService
   ) {
     this.uiService.showSidebar = false;
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
-      this.getUser(params['id']);
-      this.viwedUserId = params['id'];
-    });
+    this.activatedRoute.params.pipe(
+      tap({
+        next: params => (
+          this.getUser(params['id']),
+          this.userId = params['id']
+        )
+      }),
+      map(params => this.viwedUserId = params['id']),
+    ).subscribe();
 
     this.postTab = true;
     const tabs = document.querySelector('.tabs');
@@ -62,12 +72,15 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   getUser(id: string) {
-    this.userService.getUserById(id).subscribe(user => {
-      this.user = user;
-      this.posts = user.posts;
-      this.following = user.following;
-      this.followers = user.followers;
-    });
+    this.userService.getUserById(id, this.postsLimit).pipe(
+      map((resp) => {
+        this.user = resp.user;
+        this.posts = resp.user.posts;
+        this.following = resp.user.following;
+        this.followers = resp.user.followers;
+        this.totalPosts = resp.totalPosts
+      })
+    ).subscribe();
   };
 
   changeTab(value: string) {
@@ -86,16 +99,29 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   };
 
-  fromNow(date:Date) { 
+  fromNow(date: Date) {
     return moment(date).fromNow();
   };
 
 
-  refreshListener() { 
-    this.socketListener = this.socketService.listen('refresh-posts').subscribe(() => this.getUser(this.viwedUserId));
+  refreshListener() {
+    this.socketListener = this.socketService.listen('refresh-posts').subscribe({
+      next: () => this.getUser(this.viwedUserId)
+    });
   };
 
-  ngOnDestroy() { 
+  @HostListener('window:scroll', ['$event'])
+  onScroll(event) {
+    const scrollingElement = event.target.scrollingElement;
+    if (scrollingElement.scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 1) {
+      if (this.postsLimit < this.totalPosts) {
+        this.postsLimit += 10;
+        this.getUser(this.userId)
+      }
+    }
+  }
+
+  ngOnDestroy() {
     this.socketListener.unsubscribe();
   }
 

@@ -26,7 +26,7 @@
                                 </a>
                             </p>
                         </li>
-                        <li *ngIf="!userData.length" class="collection-item avatar">
+                        <li *ngIf="!userNotifications.length" class="collection-item avatar">
                             <img src="http://placehold.it/50x50" class="circle">
                             <a class="text">You Have No Notifications</a>
                         </li>
@@ -47,13 +47,13 @@
                     <i class="fas fa-bell" style="color: white;"></i>
                     <span *ngIf="unreadNotifications().length > 0" class="nav-label-icon">{{unreadNotifications().length}}</span>
                     <ul id='dropdown' class='dropdown-content col s12 collection'>
-                        <li class="collection-item avatar" *ngFor="let notification of userData">
+                        <li class="collection-item avatar" *ngFor="let notification of userNotifications">
                             <img src="https://res.cloudinary.com/dnfm4fq8d/image/upload/v{{notification.senderId.picVersion}}/{{notification.senderId.picId}}" class="circle">
                             <span
                                 [ngClass]="{'isRead': notification.read, 'unread': !notification.read}">{{notification.message}}</span>
                             <p class="time">{{fromNow(notification.created)}}</p>
                         </li>
-                        <li *ngIf="!userData.length" class="collection-item avatar">
+                        <li *ngIf="!userNotifications.length" class="collection-item avatar">
                             <img src="http://placehold.it/50x50" class="circle">
                             <a class="text">You Have No Notifications</a>
                         </li>
@@ -69,12 +69,12 @@
 
                   <!------------------------------ LOGOUT ------------------------------------------>
 
-                <li><a (click)="logout()">Logout</a></li>
+                <li><a (click)="logout()" id="logout__button">Logout</a></li>
             </ul>
         </div>
         <div *ngIf="showNavContent" class="nav-content">
             <div class="nav-div">
-                <img class="circle responsive-img" src="https://res.cloudinary.com/dnfm4fq8d/image/upload/v{{imageVersion}}/{{imageId}}" alt="">
+                <img src="{{userService.getUserProfilePic(userData)}}" alt={{username}} style="object-fit: cover;">
             </div>
             <h1 class="profile-name">{{ username | specialChar}}</h1>
             <p class="user-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, aut.</p>

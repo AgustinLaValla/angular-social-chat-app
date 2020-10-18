@@ -1,16 +1,17 @@
 <ul class="collection col s12 m12 l10" *ngFor="let post of posts; let i = index">
     <li class="collection-item avatar">
-        <img *ngIf="post.user.picVersion && post.user.picId"
-            src="https://res.cloudinary.com/dnfm4fq8d/image/upload/v{{post.user.picVersion}}/{{post.user.picId}}"
-            class="circle">
+        <img 
+            *ngIf="(post.user.picVersion && post.user.picId) || post.user.img" 
+            src="{{userService.getUserProfilePic(post.user)}}"
+            class="circle" 
+            style="object-fit: cover !important;"
+        >
         <span style="font-weight: bold; color:#673ab7">{{post.username}}</span>
-        <span *ngIf="post.user._id === userId" class="edit modal-trigger" data-target="modal1"  (click)="postModalService.openDialog(post)">
+        <span *ngIf="post.user._id === userId" class="edit modal-trigger" data-target="modal1"
+            (click)="postModalService.openDialog(post)">
             Edit
         </span>
-        <p *ngIf="post.createdAt == post.updatedAt" class="time ">{{ timeFromNow(post.createdAt) }}<br>
-            {{post.user.city}} {{post.user.country}}
-        </p>
-        <p *ngIf="post.createdAt != post.updatedAt" class="time ">{{ timeFromNow(post.updatedAt) }}<br>
+        <p class="time ">{{ timeFromNow(post.createdAt) }}<br>
             {{post.user.city}} {{post.user.country}}
         </p>
     </li>
@@ -35,7 +36,7 @@
                     <span class="iconSpan">{{post.totalLikes}}</span>
 
                     <i class="material-icons"
-                        [ngClass]="{ 'notLiked' : (!checkInLikesArray(post.comments)), 'liked': (checkInLikesArray(post.likes))}"
+                        [ngClass]="{ 'notLiked' : (!checkInLikesArray(post.comments)), 'liked': (checkInLikesArray(post.comments))}"
                         (click)="openCommentBox(post)">chat</i>
                     <span class="iconSpan">{{post.comments.length}}</span>
 
@@ -45,24 +46,3 @@
     </div>
 
 </ul>
-
-<!-- 
-<div class="container">
-    <div id="modal1" class="modal">
-        <div class="modal-content">
-            <h4>Edit Post
-            <button (click)="deletePost()" class="secondary-content waves-effect waves-light btn red">
-                Delete Post
-            </button>
-            </h4>
-            <p>PostValue</p>
-            <form [formGroup]="editForm" (ngSubmit)="submitEditedPost()">
-                <textarea formControlName="editedPost" class="materialize-textarea"></textarea>
-                <div class="modal-footer">
-                    <button type="button" (click)="closeModal()" class="btn deep-purple">Close</button> &nbsp;
-                    <button type="submit" class="btn deep-purple">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div> -->

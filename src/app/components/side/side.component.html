@@ -1,14 +1,14 @@
 <div class="row">
 
-    <div class="col 12 m4" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+    <div class="col s12 m4" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
         <a [routerLink]="['/user', user._id]">
             <span>Post</span>
-            <p class="num" *ngIf="userData">{{userData.posts.length}}</p>
+            <p class="num" *ngIf="totalPosts">{{totalPosts}}</p>
             <p class="num" *ngIf="!userData">0</p>
         </a>
     </div>
 
-    <div class="col 12 m4" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+    <div class="col s12 m4" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
         <a [routerLink]="['/following']">
             <span>Following</span>
             <p class="num" *ngIf="userData">{{userData.following.length}}</p>
@@ -16,7 +16,7 @@
         </a>
     </div>
 
-    <div class="col 12 m4" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+    <div class="col s12 m4" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
         <a [routerLink]="['/followers']">
             <span>Followers</span>
             <p class="num" *ngIf="userData">{{userData.followers.length}}</p>
