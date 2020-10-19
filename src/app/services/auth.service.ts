@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { URL } from '../../config/url.config';
+import { environment } from '../../environments/environment';
 import { UiService } from './ui.service';
 import { TokenService } from './token.service';
 import { Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { DOCUMENT } from '@angular/common';
 })
 export class AuthService {
 
-  private url: string = URL;
+  private url: string = environment.URL;
   public auth2: any;
   public gapi: any;
 

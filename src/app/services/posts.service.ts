@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { URL } from '../../config/url.config';
+import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 
 export class PostsService {
 
-    private url: string = URL;
+    private url: string = environment.URL;
     public postLimit: number = 10;
     public totalPost: number = 0;
     public topPostsLimit: number = 10;

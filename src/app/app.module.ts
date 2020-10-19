@@ -12,11 +12,10 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
 import { PostModalComponent } from './components/post-modal/post-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { socketURL } from '../config/url.config';
 
 
 const config: SocketIoConfig = {
-url:socketURL , options:{}
+url:environment.socketURL , options:{}
 };
 
 @NgModule({
