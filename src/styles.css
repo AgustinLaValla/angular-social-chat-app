@@ -70,3 +70,22 @@
     display: block;
     max-width: 90vw;
   }
+
+  .tabs .indicator {
+    background-color: #673ab7 !important;
+  }
+
+  .tabs .tab a:focus, .tabs .tab a:focus.active {
+    background-color:  #7f4adb33 !important;
+
+  }
+  
+  .tabs .tab a:hover, .tabs .tab a.active {
+    color:  #673ab6 !important;
+  }
+  
+  .tabs .tab.disabled a,
+  .tabs .tab.disabled a:hover {
+    color:   #673ab766 !important;
+    cursor: default;
+  }
