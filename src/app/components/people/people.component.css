@@ -28,10 +28,9 @@
   }
   
   .fa-circle {
-    color: rgb(21, 206, 21) !important;
+    /* color: rgb(21, 206, 21) !important; */
     font-size: 15px !important;
   }
-  
   .following {
     color: #673ab7 !important;
   }

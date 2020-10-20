@@ -17,7 +17,6 @@ import { tap } from 'rxjs/operators';
 })
 export class PostComponent implements OnInit, OnDestroy {
 
-  public like: boolean = false;
   public posts: any[] = [];
   public username: string;
   public userId: string;
@@ -64,7 +63,6 @@ export class PostComponent implements OnInit, OnDestroy {
   };
 
   likedPost(post: any) {
-    this.like = !this.like;
     this.postsService.addLike(post).pipe(
       tap({
         next: () => {
@@ -90,18 +88,27 @@ export class PostComponent implements OnInit, OnDestroy {
   @HostListener('window:scroll', ['$event'])
   onScroll(event) {
     const scrollingElement = event.target.scrollingElement;
-    if (scrollingElement.scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight) {
+    if (scrollingElement.scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 1) {
       if (this.postsService.postLimit < this.postsService.totalPost) {
         this.postsService.postLimit += 10;
         this.getAllPosts();
+      }
+    } else {
+      if (window.innerWidth <= 992) {
+        if (scrollingElement.scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 50) {
+          if (this.postsService.postLimit < this.postsService.totalPost) {
+            this.postsService.postLimit += 10;
+            this.getAllPosts();
+          }
+        }
       }
     }
   }
 
   setSocketListener() {
     this.socketListener = this.socketService.listen('refresh-posts').subscribe({
-      next: ({newPostAdded}) => {
-        if(newPostAdded) {
+      next: ({ newPostAdded }) => {
+        if (newPostAdded) {
           this.postsService.postLimit += 1;
         }
         this.getAllPosts()

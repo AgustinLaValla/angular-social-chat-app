@@ -52,9 +52,10 @@ export class ImagesComponent implements OnInit, OnDestroy {
 
   getUser() {
     this.usersService.getUserById(this.user._id).pipe(
-      map((resp) => {
-        this.images = resp.images;
-        this.userData = resp;
+      map(({user}) => {
+        console.log(user);
+        this.images = user.images;
+        this.userData = user;
       })
     ).subscribe();
   };

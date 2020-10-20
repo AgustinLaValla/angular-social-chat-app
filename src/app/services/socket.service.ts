@@ -21,4 +21,8 @@ export class SocketService {
         return this.socket.fromEvent(event);
     };
 
+    disconnect() {
+        this.socket.disconnect();
+    }
+
 };

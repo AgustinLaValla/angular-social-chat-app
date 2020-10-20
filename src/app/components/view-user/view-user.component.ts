@@ -9,6 +9,7 @@ import { PostModalService } from '../post-modal/post-modal.service';
 import { SocketService } from 'src/app/services/socket.service';
 import { Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { PostsService } from 'src/app/services/posts.service';
 
 @Component({
   selector: 'app-view-user',
@@ -27,10 +28,11 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
   public followers = [];
 
   public user: any;
-  private userId: string;
-
-  public currentUserId: string;
   private viwedUserId: string;
+
+  private currentUsername: string;
+  public currentUserId: string;
+  private current
 
   private postsLimit: number = 10;
   private totalPosts: number = 0;
@@ -39,9 +41,10 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
     private uiService: UiService,
     public userService: UsersService,
     private activatedRoute: ActivatedRoute,
-    private tokenServie: TokenService,
+    private tokenService: TokenService,
     public postModelService: PostModalService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private postsService: PostsService
   ) {
     this.uiService.showSidebar = false;
   }
@@ -49,10 +52,7 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRoute.params.pipe(
       tap({
-        next: params => (
-          this.getUser(params['id']),
-          this.userId = params['id']
-        )
+        next: params => this.getUser(params['id'])
       }),
       map(params => this.viwedUserId = params['id']),
     ).subscribe();
@@ -61,7 +61,8 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
     const tabs = document.querySelector('.tabs');
     new M.Tabs(tabs, {});
 
-    this.currentUserId = this.tokenServie.getTokenPayload().user._id;
+    this.currentUserId = this.tokenService.getTokenPayload().user._id;
+    this.currentUsername = this.tokenService.getUserName();
 
     this.refreshListener();
 
@@ -75,7 +76,7 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
     this.userService.getUserById(id, this.postsLimit).pipe(
       map((resp) => {
         this.user = resp.user;
-        this.posts = resp.user.posts;
+        this.posts = resp.user.posts.reverse();
         this.following = resp.user.following;
         this.followers = resp.user.followers;
         this.totalPosts = resp.totalPosts
@@ -116,9 +117,39 @@ export class ViewUserComponent implements OnInit, AfterViewInit, OnDestroy {
     if (scrollingElement.scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 1) {
       if (this.postsLimit < this.totalPosts) {
         this.postsLimit += 10;
-        this.getUser(this.userId)
+        this.getUser(this.viwedUserId)
+      } else {
+
+        if (window.innerWidth <= 992) {
+          if (scrollingElement.scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 50 && this.postsLimit < this.totalPosts) {
+            this.postsLimit += 10;
+            this.getUser(this.viwedUserId)
+          }
+        }
       }
     }
+  }
+
+  likedPost(post: any) {
+    this.postsService.addLike(post).pipe(
+      tap({
+        next: () => {
+          this.socketService.emit('refresh-posts', {});
+        }
+      })
+    ).subscribe();
+  };
+
+  checkInLikesArray(array: { username, _id }[]) {
+    return array.find(data => data.username === this.currentUsername);
+  }
+
+  setSocketListener() {
+    this.socketService.listen('refresh-posts').pipe(
+      tap({
+        next: () => this.getUser(this.viwedUserId)
+      })
+    ).subscribe();
   }
 
   ngOnDestroy() {

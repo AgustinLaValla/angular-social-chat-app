@@ -2,7 +2,7 @@
     <div class="container">
         <div class="nav-wrapper">
             <a [routerLink]="['/']" class="brand-logo">Chat App</a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <ul id="nav-mobile" class="right" id="notifications">
                 
                   <!------------------------------ CHAT NOTIFICATIONS ------------------------------>
 
@@ -72,12 +72,12 @@
                 <li><a (click)="logout()" id="logout__button">Logout</a></li>
             </ul>
         </div>
+
         <div *ngIf="showNavContent" class="nav-content">
             <div class="nav-div">
                 <img src="{{userService.getUserProfilePic(userData)}}" alt={{username}} style="object-fit: cover;">
             </div>
             <h1 class="profile-name">{{ username | specialChar}}</h1>
-            <p class="user-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, aut.</p>
         </div>
     </div>
 </nav>

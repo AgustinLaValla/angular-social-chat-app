@@ -69,7 +69,7 @@ export class UsersService {
         };
 
         if (user.img && user.google) {
-            if (user.picVersion && user.picId && user.picVersion !== '1591573111' && user.picId !== 'avatar_tmoqrv.png') {
+            if (user.picVersion && user.picId && user.picVersion !== '1603135767' && user.picId !== 'avatar_pic_a9d3ug.png') {
                 return this.getImageUrl(user.picVersion, user.picId);
             }
             return user.img

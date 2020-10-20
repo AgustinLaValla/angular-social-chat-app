@@ -5,6 +5,7 @@ import { SocketService } from 'src/app/services/socket.service';
 import { Subscription } from 'rxjs';
 import { UiService } from 'src/app/services/ui.service';
 import { map, tap } from 'rxjs/operators';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-following',
@@ -22,15 +23,20 @@ export class FollowingComponent implements OnInit, OnDestroy {
   private isLoadingSubs$ = new Subscription();
   public isLoading: boolean = false;
 
+  private onlineUsersObs$ = new Subscription();
+  private onlineUsers: any[] = [];
+
   constructor(
     private tokenService: TokenService,
     public userService: UsersService,
     private socketService: SocketService,
-    private uiService: UiService
+    private uiService: UiService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
     this.loadingListener();
+    this.getUsersOnline();
     this.uiService.showNavContent.next(true);
     this.uiService.showSidebar = true;
     this.currentUser = this.tokenService.getTokenPayload().user;
@@ -65,10 +71,21 @@ export class FollowingComponent implements OnInit, OnDestroy {
     });
   };
 
+  checkUserStatus(username: string) {
+    return this.onlineUsers.find(user => user === username);
+  };
+
+  getUsersOnline() {
+    this.onlineUsersObs$ = this.messageService.onlineUsers.subscribe({
+      next: onlineUsers => this.onlineUsers = onlineUsers
+    });
+  };
+
 
   ngOnDestroy(): void {
     this.listRefreshObs$.unsubscribe();
     this.isLoadingSubs$.unsubscribe();
+    this.onlineUsersObs$.unsubscribe();
   };
 
 };

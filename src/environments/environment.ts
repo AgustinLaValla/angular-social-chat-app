@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  URL: 'https://angular-social-chat-app.herokuapp.com/api/chatapp',
-  socketURL: 'https://angular-social-chat-app.herokuapp.com'
+  URL: 'http://localhost:3000/api/chatapp',
+  socketURL: 'http://localhost:3000'
 };
 
 /*

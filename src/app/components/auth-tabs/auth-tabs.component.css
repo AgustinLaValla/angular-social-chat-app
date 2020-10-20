@@ -24,3 +24,16 @@
 .indeterminate{
     background-color:#673ab7
 }
+
+@media screen and (max-width: 599px) {
+    .bodyDiv {
+        padding: 0;
+    }
+    .bodyContainer {
+        margin-top: 0px !important;
+    }
+
+    .container {
+        width: 100% !important;
+    }
+}

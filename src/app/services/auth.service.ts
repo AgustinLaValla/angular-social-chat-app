@@ -63,6 +63,8 @@ export class AuthService {
       this.signInWithGoogleAccount(token).pipe(
         map(resp => {
 
+          console.log(resp);
+
           this.tokenService.setToken(resp['token']);
 
           this.tokenService.setUserName(resp['user'].username);

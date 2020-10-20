@@ -102,7 +102,7 @@ export class PeopleComponent implements OnInit, OnDestroy {
   };
 
   checkUserStatus(username: string) {
-    return this.onlineUsers.filter(user => user === username);
+    return this.onlineUsers.find(user => user === username);
   };
 
   viewUser(user: any) {

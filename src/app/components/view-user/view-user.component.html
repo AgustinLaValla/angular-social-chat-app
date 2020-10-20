@@ -57,7 +57,16 @@
                                         <p>{{post.postId.post}}</p>
                                     </div>
                                     <div class="card-action">
-                                        <i class="material-icons">thumb_up</i>
+                                        <i 
+                                            class="material-icons pointer" 
+                                            (click)="likedPost(post.postId)"
+                                            [ngClass]="{ 
+                                                'notLiked' : (!checkInLikesArray(post.postId.likes)), 
+                                                'liked': (checkInLikesArray(post.postId.likes))
+                                            }"
+                                        >    
+                                            thumb_up
+                                        </i>
                                         <span id="iconSpan">
                                             {{post.postId.totalLikes}}
                                         </span>

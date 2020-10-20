@@ -13,7 +13,13 @@
                 <div class="card-action">
                     <h3 class="card-title" style="color:#673ab7;">
                         {{ friend.userFollowed.username }}
+                        <i 
+                        class="fa fa-circle"
+                        [class.green-icon]="checkUserStatus(friend.userFollowed.username)"
+                        [class.red-icon]="!checkUserStatus(friend.userFollowed.username)"
+                     ></i>
                     </h3>
+                    
                     <p *ngIf="friend.userFollowed.city && friend.userFollowed.country" style="color:#673ab7;">{{friend.userFollowed.city}} {{friend.userFollowed.country}}</p>
                     <button (click)="unfollowUser(friend.userFollowed._id)" class="btn deep-purple" style="font-size: 11px;"> Unfollow</button>
                     <a class="secondary-content" [routerLink]="['/chat', friend.userFollowed._id]" style="margin: 0;">

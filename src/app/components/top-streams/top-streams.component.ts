@@ -60,12 +60,21 @@ export class TopStreamsComponent implements OnInit, OnDestroy {
   };
 
   @HostListener('window:scroll', ['$event'])
-  onScroll(event) { 
+  onScroll(event) {
     const scrollingElement = event.target.scrollingElement;
     if (scrollingElement.scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight) {
       if (this.postsService.topPostsLimit < this.postsService.totalTopPost) {
         this.postsService.topPostsLimit += 10;
         this.getAllPosts();
+      } else {
+        if (window.innerWidth <= 992) {
+          if (scrollingElement.scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 50) {
+            if (this.postsService.topPostsLimit < this.postsService.totalTopPost) {
+              this.postsService.postLimit += 10;
+              this.getAllPosts();
+            }
+          }
+        }
       }
     }
   }

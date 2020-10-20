@@ -13,6 +13,11 @@
                 <div class="card-action">
                     <h3 class="card-title" style="color:#673ab7;">
                         {{ follower.follower.username }}
+                    <i 
+                        class="fa fa-circle"
+                        [class.green-icon]="checkUserStatus(follower.follower.username)"
+                        [class.red-icon]="!checkUserStatus(follower.follower.username)"
+                    ></i>
                     </h3>
                     <p *ngIf="follower.follower.city && follower.follower.country" style="color:#673ab7;">{{follower.follower.city}} {{follower.follower.country}}</p>
                     <button *ngIf="!checkInFollowersArray(follower.follower._id)" class="btn btn deep-purple"

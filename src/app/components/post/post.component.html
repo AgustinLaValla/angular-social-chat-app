@@ -3,10 +3,16 @@
         <img 
             *ngIf="(post.user.picVersion && post.user.picId) || post.user.img" 
             src="{{userService.getUserProfilePic(post.user)}}"
-            class="circle" 
+            class="circle pointer" 
             style="object-fit: cover !important;"
+            [routerLink]="['/user', post.user._id]"
         >
-        <span style="font-weight: bold; color:#673ab7">{{post.username}}</span>
+        <span 
+             style="font-weight: bold; color:#673ab7"
+             class="pointer"  
+             [routerLink]="['/user', post.user._id]">
+            {{post.username}}
+        </span>
         <span *ngIf="post.user._id === userId" class="edit modal-trigger" data-target="modal1"
             (click)="postModalService.openDialog(post)">
             Edit

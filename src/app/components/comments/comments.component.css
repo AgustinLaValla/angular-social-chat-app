@@ -1,3 +1,16 @@
+.card-image {
+  display: block;
+  margin: 0 auto;
+  padding: 10px 0px;
+}
+.postImage {
+  width: 100% !important;
+  margin: 0 auto !important;
+  left:   0 !important;
+  top: 10px !important;
+}
+
+
 .input-field textarea:focus + label {
   color: #444 !important;
 }

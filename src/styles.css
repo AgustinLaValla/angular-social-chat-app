@@ -89,3 +89,12 @@
     color:   #673ab766 !important;
     cursor: default;
   }
+
+  .green-icon {
+    color: rgb(21, 206, 21) !important;
+  }
+
+  .red-icon {
+    color: #aa0000 !important;
+  }
+  
