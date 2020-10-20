@@ -17,6 +17,7 @@ import { tap } from 'rxjs/operators';
 })
 export class PostComponent implements OnInit, OnDestroy {
 
+  public like: boolean = false;
   public posts: any[] = [];
   public username: string;
   public userId: string;
@@ -63,6 +64,7 @@ export class PostComponent implements OnInit, OnDestroy {
   };
 
   likedPost(post: any) {
+    this.like = !this.like;
     this.postsService.addLike(post).pipe(
       tap({
         next: () => {
@@ -95,8 +97,8 @@ export class PostComponent implements OnInit, OnDestroy {
       }
     } else {
       if (window.innerWidth <= 992) {
-        if (scrollingElement.scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 50) {
-          if (this.postsService.postLimit < this.postsService.totalPost) {
+        if (scrollingElement.scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 150) {
+          if(this.postsService.postLimit < this.postsService.totalPost) {
             this.postsService.postLimit += 10;
             this.getAllPosts();
           }

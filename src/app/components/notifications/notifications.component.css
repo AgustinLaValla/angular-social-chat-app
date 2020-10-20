@@ -36,3 +36,10 @@
 .indeterminate {
   background-color: #673ab7;
 }
+
+
+@media screen and (max-width: 599px) {
+  #notiication__icon {
+    display: none;
+  }
+}

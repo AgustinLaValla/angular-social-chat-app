@@ -50,8 +50,8 @@ export class ToolbarComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const notificatoinsDropDownMenu = document.querySelector('.follow-notifications');
     const chatNotificationDropDownMenu = document.querySelector('.chat-notifications')
-    new M.Dropdown(notificatoinsDropDownMenu, { alignment: 'left', hover: true, coverTrigger: false });
-    new M.Dropdown(chatNotificationDropDownMenu, { alignment: 'left', hover: true, coverTrigger: false });
+    new M.Dropdown(notificatoinsDropDownMenu, { alignment: 'left', hover: false, coverTrigger: false, });
+    new M.Dropdown(chatNotificationDropDownMenu, { alignment: 'left', hover: false, coverTrigger: false, });
 
     this.user = this.tokenService.getTokenPayload().user;
 

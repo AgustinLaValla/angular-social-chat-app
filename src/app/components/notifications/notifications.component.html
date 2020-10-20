@@ -6,7 +6,7 @@
     <li class="collection-item avatar" *ngFor="let notification of notifications">
         <img class="circle" [src]="usersService.getUserProfilePic(notification.senderId)" style="object-fit: cover;">
         <span class="title">{{ notification.message }}</span>
-        <a  class="secondary-content">
+        <a id="notiication__icon" class="secondary-content">
             <i *ngIf="!notification.read" class="material-icons">brightness_1</i>
             <i *ngIf="notification.read" class="material-icons">panorama_fish_eye</i>
         </a>

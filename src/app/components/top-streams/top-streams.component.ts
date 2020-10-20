@@ -68,7 +68,7 @@ export class TopStreamsComponent implements OnInit, OnDestroy {
         this.getAllPosts();
       } else {
         if (window.innerWidth <= 992) {
-          if (scrollingElement.scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 50) {
+          if (scrollingElement.scrollTop + scrollingElement.clientHeight >= scrollingElement.scrollHeight - 100) {
             if (this.postsService.topPostsLimit < this.postsService.totalTopPost) {
               this.postsService.postLimit += 10;
               this.getAllPosts();

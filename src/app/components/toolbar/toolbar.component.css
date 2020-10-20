@@ -131,7 +131,8 @@ li.dropdown-button {
 
   .nav-content {
    height: auto;
-   margin-top: 50px; 
+   margin-top: 50px;
+   padding-bottom: 20px; 
   }
 
   .dropdown-content {

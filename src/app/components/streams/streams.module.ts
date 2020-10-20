@@ -23,5 +23,8 @@ import { FileUploadModule } from 'ng2-file-upload';
     ReactiveFormsModule,
     FileUploadModule
   ],
+  providers: [
+    {provide: Window, useValue: window}
+  ]
 })
 export class StreamsModule { }
